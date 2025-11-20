@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Bo'limlar" %} - {{ site_settings.site_name_uz }}{% endblock %}
+{% block body_class %}departments-page{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="page-title">
+  <div class="heading">
+    <div class="container">
+      <div class="row d-flex justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="heading-title">{% trans "Bo'limlarimiz" %}</h1>
+          <p class="mb-0">
+            {% trans "Professional tibbiy xizmatlar ko'rsatadigan bo'limlarimiz bilan tanishing. Har bir bo'limda malakali mutaxassislar ishlaydi." %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'index' %}">{% trans "Bosh sahifa" %}</a></li>
+        <li class="current">{% trans "Bo'limlar" %}</li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+<!-- Departments Section -->
+<section id="departments" class="departments section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-4">
+      {% for department in departments %}
+      <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter|add:100 }}">
+        <div class="department-item">
+          <div class="department-content">
+            <div class="department-header">
+              <div class="department-icon">
+                <i class="{{ department.icon }}"></i>
+              </div>
+              <div class="department-info">
+                <h3>
+                  {% if LANGUAGE_CODE == 'ru' %}{{ department.name_ru }}
+                  {% elif LANGUAGE_CODE == 'en' %}{{ department.name_en }}
+                  {% else %}{{ department.name_uz }}{% endif %}
+                </h3>
+                <span class="department-category">{% trans "Tibbiy bo'lim" %}</span>
+              </div>
+            </div>
+            <p>
+              {% if LANGUAGE_CODE == 'ru' %}{{ department.description_ru|truncatewords:30 }}
+              {% elif LANGUAGE_CODE == 'en' %}{{ department.description_en|truncatewords:30 }}
+              {% else %}{{ department.description_uz|truncatewords:30 }}{% endif %}
+            </p>
+            <div class="department-features">
+              <span class="feature-badge">{% trans "Professional xizmat" %}</span>
+              <span class="feature-badge">{% trans "Zamonaviy uskunalar" %}</span>
+            </div>
+          </div>
+          {% if department.image %}
+          <div class="department-image">
+            <img src="{{ department.image.url }}" alt="{{ department.name_uz }}" class="img-fluid">
+            <div class="department-overlay">
+              <a href="{% url 'department-detail' department.pk %}" class="department-link">
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center">
+        <p class="lead">{% trans "Bo'limlar mavjud emas" %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta section light-background">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h3>{% trans "Qabulga yozilmoqchimisiz?" %}</h3>
+        <p>{% trans "Bizning mutaxassislar bilan bog'laning va professional yordam oling" %}</p>
+        <a href="{% url 'appointment' %}" class="btn btn-primary btn-lg">{% trans "Qabulga yozilish" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

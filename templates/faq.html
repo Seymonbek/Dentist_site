@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "FAQ" %} - {{ site_settings.site_name_uz }}{% endblock %}
+{% block body_class %}faq-page{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="page-title">
+  <div class="heading">
+    <div class="container">
+      <div class="row d-flex justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="heading-title">{% trans "Tez-tez so'raladigan savollar" %}</h1>
+          <p class="mb-0">{% trans "Eng ko'p beriladigan savollarga javoblar. Agar savolingizga javob topmagan bo'lsangiz, biz bilan bog'laning." %}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'index' %}">{% trans "Bosh sahifa" %}</a></li>
+        <li class="current">{% trans "FAQ" %}</li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+<!-- Faq Section -->
+<section id="faq" class="faq section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
+        <div class="faq-container">
+          {% for faq in faqs %}
+          <div class="faq-item {% if forloop.first %}faq-active{% endif %}">
+            <h3>
+              {% if LANGUAGE_CODE == 'ru' %}{{ faq.question_ru }}
+              {% elif LANGUAGE_CODE == 'en' %}{{ faq.question_en }}
+              {% else %}{{ faq.question_uz }}{% endif %}
+            </h3>
+            <div class="faq-content">
+              <p>
+                {% if LANGUAGE_CODE == 'ru' %}{{ faq.answer_ru }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ faq.answer_en }}
+                {% else %}{{ faq.answer_uz }}{% endif %}
+              </p>
+            </div>
+            <i class="faq-toggle bi bi-chevron-right"></i>
+          </div>
+          {% empty %}
+          <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle me-2"></i>
+            {% trans "Hozircha savollar mavjud emas" %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact CTA -->
+<section class="cta section light-background">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h3>{% trans "Javob topmadingizmi?" %}</h3>
+        <p>{% trans "Agar savolingiz bo'lsa, biz bilan bog'laning. Biz sizga yordam berishdan mamnun bo'lamiz" %}</p>
+        <div class="mt-4">
+          <a href="{% url 'contact' %}" class="btn btn-primary btn-lg me-3">{% trans "Bog'lanish" %}</a>
+          {% if site_settings %}
+          <a href="tel:{{ site_settings.phone_1 }}" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-telephone me-2"></i>{% trans "Qo'ng'iroq" %}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

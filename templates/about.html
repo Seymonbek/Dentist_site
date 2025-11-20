@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Biz haqimizda" %} - {{ site_settings.site_name_uz }}{% endblock %}
+{% block body_class %}about-page{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="page-title">
+  <div class="heading">
+    <div class="container">
+      <div class="row d-flex justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="heading-title">{% trans "Biz haqimizda" %}</h1>
+          <p class="mb-0">
+            {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.about_ru }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.about_en }}
+            {% else %}{{ site_settings.about_uz }}{% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'index' %}">{% trans "Bosh sahifa" %}</a></li>
+        <li class="current">{% trans "Biz haqimizda" %}</li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+<!-- About Section -->
+<section id="about" class="about section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <div class="intro-section">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center" data-aos="fade-up" data-aos-delay="100">
+          <h2>{% trans "1985 yildan beri tibbiyotda mukammallik" %}</h2>
+          <p class="lead">
+            {% trans "Biz ajoyib tibbiy xizmat tushunish bilan boshlanishiga ishonamiz. Bizning fidoyi mutaxassislarimiz jamoasi har bir bemorga eng yuqori standartdagi xizmatni ta'minlash uchun ilg'or texnologiyani mehr-oqibatli, shaxsiy davolanish bilan birlashtiradi." %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="image-stats-section">
+      <div class="row align-items-center">
+        <div class="col-lg-7" data-aos="fade-right" data-aos-delay="200">
+          <div class="image-gallery">
+            <div class="main-image-container">
+              {% if gallery.0 %}
+              <img src="{{ gallery.0.image.url }}" class="img-fluid main-image" alt="{% trans 'Klinika' %}">
+              {% else %}
+              <img src="{% static 'assets/img/health/facilities-3.webp' %}" class="img-fluid main-image" alt="{% trans 'Klinika' %}">
+              {% endif %}
+            </div>
+            <div class="secondary-images">
+              {% for img in gallery|slice:"1:3" %}
+              <img src="{{ img.image.url }}" class="img-fluid secondary-image" alt="{{ img.title_uz }}" data-aos="zoom-in" data-aos-delay="{{ forloop.counter|add:400 }}">
+              {% empty %}
+              <img src="{% static 'assets/img/health/staff-12.webp' %}" class="img-fluid secondary-image" alt="{% trans 'Jamoa' %}" data-aos="zoom-in" data-aos-delay="400">
+              <img src="{% static 'assets/img/health/consultation-4.webp' %}" class="img-fluid secondary-image" alt="{% trans 'Konsultatsiya' %}" data-aos="zoom-in" data-aos-delay="500">
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5" data-aos="fade-left" data-aos-delay="300">
+          <div class="stats-content">
+            <h3>{% trans "Ishonchli tibbiy xizmat ko'rsatuvchi" %}</h3>
+            <p>{% trans "Biz professional tibbiy xizmat ko'rsatish va bemorlarimizning sog'lig'ini birinchi o'ringa qo'yishga intilamiz." %}</p>
+
+            {% if statistics %}
+            <div class="stats-list">
+              {% for stat in statistics|slice:":3" %}
+              <div class="stat-row">
+                <div class="stat-number">
+                  <span data-purecounter-start="0" data-purecounter-end="{{ stat.value }}" data-purecounter-duration="0" class="purecounter">{{ stat.value }}</span>
+                  {% if 'Yil' in stat.label_uz or '%' in stat.label_uz %}{% if '%' in stat.label_uz %}%{% else %}+{% endif %}{% endif %}
+                </div>
+                <div class="stat-info">
+                  <h5>
+                    {% if LANGUAGE_CODE == 'ru' %}{{ stat.label_ru }}
+                    {% elif LANGUAGE_CODE == 'en' %}{{ stat.label_en }}
+                    {% else %}{{ stat.label_uz }}{% endif %}
+                  </h5>
+                  <p>{% trans "Professional xizmat ko'rsatish" %}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mission-section" data-aos="fade-up" data-aos-delay="400">
+      <div class="row">
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="mission-item">
+            <div class="mission-icon">
+              <i class="bi bi-heart"></i>
+            </div>
+            <h4>{% trans "Bizning missiyamiz" %}</h4>
+            <p>{% trans "Har bir shaxsga shaxsiylashtirilgan xizmatni ta'minlash orqali tibbiy mukammallik bilan chinakam mehr-shafqatni birlashtirgan keng qamrovli, bemorga yo'naltirilgan sog'liqni saqlash xizmatini ko'rsatish." %}</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="mission-item">
+            <div class="mission-icon">
+              <i class="bi bi-eye"></i>
+            </div>
+            <h4>{% trans "Bizning qarashamiz" %}</h4>
+            <p>{% trans "Innovatsion davolash, ajoyib natijalar va jamiyatimizdagi hayotni yaxshilashga bo'lgan qat'iy majburiyatimiz bilan tan olingan mintaqamizdagi yetakchi tibbiy xizmat ko'rsatuvchi bo'lish." %}</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="mission-item">
+            <div class="mission-icon">
+              <i class="bi bi-star"></i>
+            </div>
+            <h4>{% trans "Bizning va'damiz" %}</h4>
+            <p>{% trans "Har bir bemor qulay, qo'llab-quvvatlovchi muhitda eng yuqori sifatli xizmatni oladi, bu erda ularning sog'lig'i, qadr-qimmati va farovonligi bizning birinchi ustuvorliklarimizdir." %}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="specialties-section" data-aos="fade-up" data-aos-delay="500">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h3>{% trans "Mukammallik sohalari" %}</h3>
+          <p class="section-description">{% trans "Bizning ixtisoslashgan bo'limlarimiz bir nechta tibbiy fanlar bo'yicha keng qamrovli xizmatni ta'minlash uchun birgalikda ishlaydi" %}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        {% for department in departments|slice:":6" %}
+        <div class="col-lg-2 col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+          <div class="specialty-item">
+            <i class="{{ department.icon }}"></i>
+            <span>
+              {% if LANGUAGE_CODE == 'ru' %}{{ department.name_ru }}
+              {% elif LANGUAGE_CODE == 'en' %}{{ department.name_en }}
+              {% else %}{{ department.name_uz }}{% endif %}
+            </span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if doctors %}
+    <div class="team-section" data-aos="fade-up" data-aos-delay="600">
+      <div class="row">
+        <div class="col-lg-12 text-center mb-5">
+          <h3>{% trans "Bizning professional jamoamiz" %}</h3>
+          <p class="section-description">{% trans "Malakali va tajribali mutaxassislar" %}</p>
+        </div>
+      </div>
+      <div class="row gy-4">
+        {% for doctor in doctors %}
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+          <div class="doctor-card">
+            <div class="doctor-image">
+              {% if doctor.photo %}
+              <img src="{{ doctor.photo.url }}" alt="{{ doctor.full_name }}" class="img-fluid">
+              {% else %}
+              <img src="{% static 'assets/img/health/staff-1.webp' %}" alt="{{ doctor.full_name }}" class="img-fluid">
+              {% endif %}
+            </div>
+            <div class="doctor-info">
+              <h4>{{ doctor.full_name }}</h4>
+              <p class="specialty">
+                {% if LANGUAGE_CODE == 'ru' %}{{ doctor.specialty_ru }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ doctor.specialty_en }}
+                {% else %}{{ doctor.specialty_uz }}{% endif %}
+              </p>
+              <p class="experience">{{ doctor.experience_years }} {% trans "yil tajriba" %}</p>
+              <div class="social-links">
+                {% if doctor.facebook %}<a href="{{ doctor.facebook }}"><i class="bi bi-facebook"></i></a>{% endif %}
+                {% if doctor.instagram %}<a href="{{ doctor.instagram }}"><i class="bi bi-instagram"></i></a>{% endif %}
+                {% if doctor.twitter %}<a href="{{ doctor.twitter }}"><i class="bi bi-twitter"></i></a>{% endif %}
+                {% if doctor.linkedin %}<a href="{{ doctor.linkedin }}"><i class="bi bi-linkedin"></i></a>{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="text-center mt-5">
+        <a href="{% url 'doctors' %}" class="btn btn-primary">{% trans "Barcha shifokorlar" %}</a>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="accreditation-section" data-aos="fade-up" data-aos-delay="700">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h3>{% trans "Tan olingan mukammallik" %}</h3>
+          <p class="section-description">{% trans "Sifatga bo'lgan majburiyatimiz nufuzli sog'liqni saqlash tashkilotlari tomonidan tasdiqlanadi" %}</p>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="accreditation-grid">
+            {% for i in "123456"|make_list %}
+            <div class="accreditation-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+              <img src="{% static 'assets/img/clients/clients-'|add:i|add:'.webp' %}" class="img-fluid" alt="{% trans 'Sertifikat' %}">
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta section light-background">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h3>{% trans "Bizga qo'shilishga tayyormisiz?" %}</h3>
+        <p>{% trans "Bugun konsultatsiyani rejalashtiring va professional tibbiy xizmatni his eting" %}</p>
+        <a href="{% url 'appointment' %}" class="btn btn-primary btn-lg">{% trans "Qabulga yozilish" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

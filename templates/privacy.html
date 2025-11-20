@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Maxfiylik siyosati" %} - {{ site_settings.site_name_uz }}{% endblock %}
+{% block body_class %}privacy-page{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="page-title">
+  <div class="heading">
+    <div class="container">
+      <div class="row d-flex justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="heading-title">{% trans "Maxfiylik siyosati" %}</h1>
+          <p class="mb-0">
+            {% trans "Sizning shaxsiy ma'lumotlaringiz qanday to'planishi, ishlatilishi va himoyalanishi haqida ma'lumot." %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'index' %}">{% trans "Bosh sahifa" %}</a></li>
+        <li class="current">{% trans "Maxfiylik" %}</li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+<!-- Privacy Section -->
+<section id="privacy" class="privacy section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+
+        <div class="privacy-content">
+          <div class="last-updated" data-aos="fade-up" data-aos-delay="200">
+            <p><strong>{% trans "Oxirgi yangilanish" %}:</strong> {% now "d F Y" %}</p>
+          </div>
+
+          <div class="privacy-section" data-aos="fade-up" data-aos-delay="300">
+            <h3>{% trans "Biz yig'adigan ma'lumotlar" %}</h3>
+            <p>{% trans "Biz siz bilan muloqot qilganda, xizmatlarimizdan foydalanganda yoki bizning veb-saytimizga tashrif buyurganingizda turli xil ma'lumotlarni yig'amiz, ishlatamiz va oshkor qilamiz." %}</p>
+
+            <h4>{% trans "Shaxsiy ma'lumotlar" %}</h4>
+            <ul>
+              <li>{% trans "Ism va familiya" %}</li>
+              <li>{% trans "Telefon raqami va email manzili" %}</li>
+              <li>{% trans "Yosh va tug'ilgan sana" %}</li>
+              <li>{% trans "Manzil ma'lumotlari" %}</li>
+              <li>{% trans "Tibbiy tarix va hujjatlar" %}</li>
+            </ul>
+
+            <h4>{% trans "Foydalanish ma'lumotlari" %}</h4>
+            <p>{% trans "Biz avtomatik ravishda quyidagilarni to'playmiz: IP-manzil, brauzer turi, tashrif buyurilgan sahifalar, tashrif vaqti va muddati." %}</p>
+          </div>
+
+          <div class="privacy-section" data-aos="fade-up" data-aos-delay="400">
+            <h3>{% trans "Ma'lumotlaringizdan qanday foydalanamiz" %}</h3>
+            <p>{% trans "Sizning ma'lumotlaringizdan quyidagi maqsadlarda foydalanamiz:" %}</p>
+
+            <div class="info-box">
+              <h4>{% trans "Asosiy maqsadlar" %}</h4>
+              <ol>
+                <li>{% trans "Tibbiy xizmatlar ko'rsatish va qabullarni boshqarish" %}</li>
+                <li>{% trans "Siz bilan aloqa o'rnatish va ma'lumot berish" %}</li>
+                <li>{% trans "Xizmatlarimizni yaxshilash va shaxsiylashtirish" %}</li>
+                <li>{% trans "Qonuniy talablarga rioya qilish" %}</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="privacy-section" data-aos="fade-up" data-aos-delay="500">
+            <h3>{% trans "Ma'lumotlarni ulashish va oshkor qilish" %}</h3>
+            <p>{% trans "Biz sizning ma'lumotlaringizni faqat zarur hollarda va qonuniy asosda uchinchi shaxslar bilan bo'lishamiz." %}</p>
+
+            <div class="highlight-box" data-aos="fade-up" data-aos-delay="600">
+              <i class="bi bi-shield-check"></i>
+              <h4>{% trans "Biz hech qachon ma'lumotlaringizni sotmaymiz" %}</h4>
+              <p>{% trans "Sizning shaxsiy ma'lumotlaringiz hech qachon tijorat maqsadlarida sotilmaydi yoki ijarasiga berilmaydi." %}</p>
+            </div>
+          </div>
+
+          <div class="privacy-section" data-aos="fade-up" data-aos-delay="700">
+            <h3>{% trans "Ma'lumotlar xavfsizligi" %}</h3>
+            <p>{% trans "Biz sizning shaxsiy ma'lumotlaringizni himoya qilish uchun zamonaviy xavfsizlik choralarini qo'llaymiz." %}</p>
+
+            <div class="security-measures">
+              <div class="row">
+                <div class="col-md-6" data-aos="fade-right" data-aos-delay="800">
+                  <div class="measure-item">
+                    <i class="bi bi-lock-fill"></i>
+                    <h5>{% trans "Shifrlash" %}</h5>
+                    <p>{% trans "Barcha maxfiy ma'lumotlar SSL/TLS texnologiyasi yordamida shifrlangan" %}</p>
+                  </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left" data-aos-delay="900">
+                  <div class="measure-item">
+                    <i class="bi bi-server"></i>
+                    <h5>{% trans "Xavfsiz saqlash" %}</h5>
+                    <p>{% trans "Ma'lumotlar xavfsiz serverlarda saqlanadi va cheklangan kirish huquqlari bilan himoyalangan" %}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="privacy-section" data-aos="fade-up" data-aos-delay="1000">
+            <h3>{% trans "Sizning huquqlaringiz" %}</h3>
+            <p>{% trans "Siz o'z shaxsiy ma'lumotlaringizga nisbatan quyidagi huquqlarga egasiz:" %}</p>
+
+            <div class="rights-list">
+              <div class="right-item">
+                <i class="bi bi-eye"></i>
+                <div>
+                  <h5>{% trans "Kirish huquqi" %}</h5>
+                  <p>{% trans "Biz haqingizda qanday ma'lumotlarga ega ekanligimizni bilish" %}</p>
+                </div>
+              </div>
+              <div class="right-item">
+                <i class="bi bi-pencil"></i>
+                <div>
+                  <h5>{% trans "Tuzatish huquqi" %}</h5>
+                  <p>{% trans "Noto'g'ri ma'lumotlarni tuzatishni so'rash" %}</p>
+                </div>
+              </div>
+              <div class="right-item">
+                <i class="bi bi-trash"></i>
+                <div>
+                  <h5>{% trans "O'chirish huquqi" %}</h5>
+                  <p>{% trans "Shaxsiy ma'lumotlaringizni o'chirishni so'rash" %}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="privacy-section" data-aos="fade-up" data-aos-delay="1100">
+            <h3>{% trans "Cookie va kuzatuv" %}</h3>
+            <p>{% trans "Biz veb-sayt tajribasini yaxshilash va xizmatlarni shaxsiylashtirish uchun cookie va shunga o'xshash texnologiyalardan foydalanamiz." %}</p>
+
+            <div class="cookie-types">
+              <h4>{% trans "Foydalanadigan cookie turlari" %}</h4>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>{% trans "Cookie turi" %}</th>
+                      <th>{% trans "Maqsad" %}</th>
+                      <th>{% trans "Muddati" %}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{% trans "Zaruriy" %}</td>
+                      <td>{% trans "Sayt asosiy funksiyalari uchun" %}</td>
+                      <td>{% trans "Sessiya" %}</td>
+                    </tr>
+                    <tr>
+                      <td>{% trans "Analitika" %}</td>
+                      <td>{% trans "Foydalanishni tahlil qilish uchun" %}</td>
+                      <td>{% trans "2 yil" %}</td>
+                    </tr>
+                    <tr>
+                      <td>{% trans "Marketing" %}</td>
+                      <td>{% trans "Reklama ko'rsatish uchun" %}</td>
+                      <td>{% trans "1 yil" %}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="privacy-section" data-aos="fade-up" data-aos-delay="1200">
+            <h3>{% trans "Ushbu Maxfiylik siyosatiga o'zgartirishlar" %}</h3>
+            <p>{% trans "Biz vaqti-vaqti bilan ushbu Maxfiylik siyosatini yangilashimiz mumkin. O'zgarishlar bu sahifada e'lon qilinadi." %}</p>
+          </div>
+
+          <div class="contact-section" data-aos="fade-up" data-aos-delay="1300">
+            <h3>{% trans "Biz bilan bog'laning" %}</h3>
+            <p>{% trans "Agar sizda maxfiylik haqida savollar bo'lsa, iltimos biz bilan bog'laning." %}</p>
+
+            <div class="contact-info">
+              {% if site_settings %}
+              <div class="contact-item">
+                <i class="bi bi-envelope"></i>
+                <span>{{ site_settings.email }}</span>
+              </div>
+              <div class="contact-item">
+                <i class="bi bi-geo-alt"></i>
+                <span>
+                  {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.address_ru }}
+                  {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.address_en }}
+                  {% else %}{{ site_settings.address_uz }}{% endif %}
+                </span>
+              </div>
+              <div class="contact-item">
+                <i class="bi bi-telephone"></i>
+                <span>{{ site_settings.phone_1 }}</span>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Shifokorlar" %} - {{ site_settings.site_name_uz }}{% endblock %}
+{% block body_class %}doctors-page{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="page-title">
+  <div class="heading">
+    <div class="container">
+      <div class="row d-flex justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="heading-title">{% trans "Bizning shifokorlar" %}</h1>
+          <p class="mb-0">
+            {% trans "Malakali va tajribali tibbiy mutaxassislarimiz bilan tanishing. Har bir shifokor o'z sohasida yuqori malakaga ega." %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'index' %}">{% trans "Bosh sahifa" %}</a></li>
+        <li class="current">{% trans "Shifokorlar" %}</li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+<!-- Doctors Section -->
+<section id="doctors" class="doctors section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <!-- Filter Bar -->
+    <div class="doctor-directory mb-5">
+      <div class="directory-bar p-3 p-md-4 rounded-3">
+        <div class="row g-3 align-items-center">
+          <div class="col-lg-10">
+            <div class="filter-buttons">
+              <a href="{% url 'doctors' %}" class="btn btn-filter {% if not selected_department %}active{% endif %}">
+                {% trans "Barcha shifokorlar" %}
+              </a>
+              {% for dept in departments %}
+              <a href="{% url 'doctors' %}?department={{ dept.pk }}" class="btn btn-filter {% if selected_department == dept.pk|stringformat:'s' %}active{% endif %}">
+                {% if LANGUAGE_CODE == 'ru' %}{{ dept.name_ru }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ dept.name_en }}
+                {% else %}{{ dept.name_uz }}{% endif %}
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="isotope-layout mt-4" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+        <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="300">
+          {% for doctor in doctors %}
+          <div class="col-lg-3 col-md-6 doctor-item isotope-item">
+            <article class="doctor-card h-100">
+              <figure class="doctor-media">
+                {% if doctor.photo %}
+                <img src="{{ doctor.photo.url }}" class="img-fluid" alt="{{ doctor.full_name }}" loading="lazy">
+                {% else %}
+                <img src="{% static 'assets/img/health/staff-3.webp' %}" class="img-fluid" alt="{{ doctor.full_name }}" loading="lazy">
+                {% endif %}
+                {% if doctor.experience_years >= 15 %}
+                <span class="tag">{% trans "Senior mutaxassis" %}</span>
+                {% endif %}
+              </figure>
+              <div class="doctor-content">
+                <h3 class="doctor-name">{{ doctor.full_name }}</h3>
+                <p class="doctor-title">
+                  {% if LANGUAGE_CODE == 'ru' %}{{ doctor.specialty_ru }}
+                  {% elif LANGUAGE_CODE == 'en' %}{{ doctor.specialty_en }}
+                  {% else %}{{ doctor.specialty_uz }}{% endif %}
+                </p>
+                <p class="doctor-desc">
+                  {% if LANGUAGE_CODE == 'ru' %}{{ doctor.bio_ru|truncatewords:15 }}
+                  {% elif LANGUAGE_CODE == 'en' %}{{ doctor.bio_en|truncatewords:15 }}
+                  {% else %}{{ doctor.bio_uz|truncatewords:15 }}{% endif %}
+                </p>
+                <div class="doctor-meta">
+                  <span class="badge dept">{{ doctor.experience_years }} {% trans "yil tajriba" %}</span>
+                </div>
+                <div class="doctor-actions">
+                  <a href="{% url 'appointment' %}" class="btn btn-sm btn-appointment">{% trans "Qabulga yozilish" %}</a>
+                </div>
+                {% if doctor.facebook or doctor.instagram or doctor.twitter or doctor.linkedin %}
+                <div class="social-links mt-2">
+                  {% if doctor.facebook %}<a href="{{ doctor.facebook }}"><i class="bi bi-facebook"></i></a>{% endif %}
+                  {% if doctor.instagram %}<a href="{{ doctor.instagram }}"><i class="bi bi-instagram"></i></a>{% endif %}
+                  {% if doctor.twitter %}<a href="{{ doctor.twitter }}"><i class="bi bi-twitter"></i></a>{% endif %}
+                  {% if doctor.linkedin %}<a href="{{ doctor.linkedin }}"><i class="bi bi-linkedin"></i></a>{% endif %}
+                </div>
+                {% endif %}
+              </div>
+            </article>
+          </div>
+          {% empty %}
+          <div class="col-12 text-center">
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>
+              {% trans "Hozircha shifokorlar mavjud emas" %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta section light-background">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h3>{% trans "Professional yordam kerakmi?" %}</h3>
+        <p>{% trans "Bizning mutaxassislar bilan bog'laning va professional maslahat oling" %}</p>
+        <a href="{% url 'appointment' %}" class="btn btn-primary btn-lg">{% trans "Qabulga yozilish" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

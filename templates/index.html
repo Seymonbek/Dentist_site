@@ -1,0 +1,521 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% if LANGUAGE_CODE == 'ru' %}{{ site_settings.site_name_ru|default:"MediNest" }} - Главная
+{% elif LANGUAGE_CODE == 'en' %}{{ site_settings.site_name_en|default:"MediNest" }} - Home
+{% else %}{{ site_settings.site_name_uz|default:"MediNest" }} - Bosh sahifa{% endif %}
+{% endblock %}
+
+{% block body_class %}index-page{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section id="hero" class="hero section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-5">
+        <div class="hero-image" data-aos="fade-right" data-aos-delay="100">
+          {% if doctors.first.photo %}
+          <img src="{{ doctors.first.photo.url }}" alt="{% trans 'Shifokor' %}" class="img-fluid main-image">
+          {% else %}
+          <img src="{% static 'assets/img/health/staff-8.webp' %}" alt="{% trans 'Shifokor' %}" class="img-fluid main-image">
+          {% endif %}
+          
+          {% if site_settings %}
+          <div class="floating-card emergency-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="card-content">
+              <i class="bi bi-telephone-fill"></i>
+              <div class="text">
+                <span class="label">{% trans "24/7 Shoshilinch yordam" %}</span>
+                <span class="number">{{ site_settings.phone_1 }}</span>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          
+          {% if statistics %}
+          <div class="floating-card stats-card" data-aos="fade-up" data-aos-delay="400">
+            {% for stat in statistics|slice:":2" %}
+            <div class="stat-item">
+              <span class="number">{{ stat.value }}{% if 'Yil' in stat.label_uz or 'Years' in stat.label_en %}+{% endif %}</span>
+              <span class="label">
+                {% if LANGUAGE_CODE == 'ru' %}{{ stat.label_ru }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ stat.label_en }}
+                {% else %}{{ stat.label_uz }}{% endif %}
+              </span>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="hero-content" data-aos="fade-left" data-aos-delay="200">
+          <div class="badge-container">
+            <span class="hero-badge">{% trans "Ishonchli tibbiy xizmat" %}</span>
+          </div>
+
+          <h1 class="hero-title">
+            {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.tagline_ru|default:"Профессиональная стоматология" }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.tagline_en|default:"Professional Dental Care" }}
+            {% else %}{{ site_settings.tagline_uz|default:"Professional stomatologiya xizmatlari" }}{% endif %}
+          </h1>
+          
+          <p class="hero-description">
+            {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.about_ru|default:"Мы предоставляем высококачественные стоматологические услуги" }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.about_en|default:"We provide high quality dental services" }}
+            {% else %}{{ site_settings.about_uz|default:"Biz yuqori sifatli stomatologiya xizmatlarini taqdim etamiz" }}{% endif %}
+          </p>
+
+          {% if statistics %}
+          <div class="hero-stats">
+            <div class="stat-group">
+              {% for stat in statistics|slice:":3" %}
+              <div class="stat">
+                <i class="{{ stat.icon }}"></i>
+                <div class="stat-text">
+                  <span class="number">{{ stat.value }}+</span>
+                  <span class="label">
+                    {% if LANGUAGE_CODE == 'ru' %}{{ stat.label_ru }}
+                    {% elif LANGUAGE_CODE == 'en' %}{{ stat.label_en }}
+                    {% else %}{{ stat.label_uz }}{% endif %}
+                  </span>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="cta-section">
+            <div class="cta-buttons">
+              <a href="{% url 'appointment' %}" class="btn btn-primary">{% trans "Qabulga yozilish" %}</a>
+              <a href="{% url 'about' %}" class="btn btn-secondary">
+                <i class="bi bi-play-circle"></i>
+                {% trans "Batafsil ma'lumot" %}
+              </a>
+            </div>
+
+            <div class="quick-actions">
+              <a href="{% url 'services' %}" class="action-link">
+                <i class="bi bi-calendar-check"></i>
+                <span>{% trans "Xizmatlar" %}</span>
+              </a>
+              <a href="{% url 'contact' %}" class="action-link">
+                <i class="bi bi-chat-dots"></i>
+                <span>{% trans "Aloqa" %}</span>
+              </a>
+              <a href="{% url 'doctors' %}" class="action-link">
+                <i class="bi bi-file-medical"></i>
+                <span>{% trans "Shifokorlar" %}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="background-elements">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-pattern"></div>
+  </div>
+</section>
+
+<!-- Home About Section -->
+<section id="home-about" class="home-about section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row">
+      <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-delay="150">
+        <h2 class="section-heading">{% trans "Bizning klinika haqida" %}</h2>
+        <p class="lead-description">
+          {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.about_ru }}
+          {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.about_en }}
+          {% else %}{{ site_settings.about_uz }}{% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="row align-items-center gy-5">
+      <div class="col-lg-7" data-aos="fade-right" data-aos-delay="200">
+        <div class="image-grid">
+          <div class="primary-image">
+            {% if gallery.first %}
+            <img src="{{ gallery.first.image.url }}" alt="{% trans 'Klinika' %}" class="img-fluid">
+            {% else %}
+            <img src="{% static 'assets/img/health/facilities-6.webp' %}" alt="{% trans 'Klinika' %}" class="img-fluid">
+            {% endif %}
+            <div class="certification-badge">
+              <i class="bi bi-award"></i>
+              <span>{% trans "Sertifikatlangan" %}</span>
+            </div>
+          </div>
+          <div class="secondary-images">
+            {% for img in gallery|slice:"1:3" %}
+            <div class="small-image">
+              <img src="{{ img.image.url }}" alt="{{ img.title_uz }}" class="img-fluid">
+            </div>
+            {% empty %}
+            <div class="small-image">
+              <img src="{% static 'assets/img/health/consultation-3.webp' %}" alt="{% trans 'Konsultatsiya' %}" class="img-fluid">
+            </div>
+            <div class="small-image">
+              <img src="{% static 'assets/img/health/surgery-2.webp' %}" alt="{% trans 'Jarayon' %}" class="img-fluid">
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5" data-aos="fade-left" data-aos-delay="300">
+        <div class="content-wrapper">
+          <div class="highlight-box">
+            <div class="highlight-icon">
+              <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <div class="highlight-content">
+              <h4>{% trans "Bemorga yo'naltirilgan yondashuv" %}</h4>
+              <p>{% trans "Har bir davolash rejasi bemor ehtiyojlariga moslashtiriladi" %}</p>
+            </div>
+          </div>
+
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon"><i class="bi bi-check-circle-fill"></i></div>
+              <div class="feature-text">{% trans "Zamonaviy texnologiyalar" %}</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="bi bi-check-circle-fill"></i></div>
+              <div class="feature-text">{% trans "Malakali shifokorlar" %}</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="bi bi-check-circle-fill"></i></div>
+              <div class="feature-text">{% trans "Kompleks reabilitatsiya" %}</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"><i class="bi bi-check-circle-fill"></i></div>
+              <div class="feature-text">{% trans "24/7 shoshilinch yordam" %}</div>
+            </div>
+          </div>
+
+          {% if statistics %}
+          <div class="metrics-row">
+            <div class="metric-box">
+              <div class="metric-number">
+                <span class="purecounter" data-purecounter-start="0" data-purecounter-end="{{ statistics.0.value }}" data-purecounter-duration="0">{{ statistics.0.value }}</span>
+                {% if '%' in statistics.0.label_uz %}%{% else %}+{% endif %}
+              </div>
+              <div class="metric-label">
+                {% if LANGUAGE_CODE == 'ru' %}{{ statistics.0.label_ru }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ statistics.0.label_en }}
+                {% else %}{{ statistics.0.label_uz }}{% endif %}
+              </div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-number">
+                <span class="purecounter" data-purecounter-start="0" data-purecounter-end="{{ statistics.1.value }}" data-purecounter-duration="0">{{ statistics.1.value }}</span>+
+              </div>
+              <div class="metric-label">
+                {% if LANGUAGE_CODE == 'ru' %}{{ statistics.1.label_ru }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ statistics.1.label_en }}
+                {% else %}{{ statistics.1.label_uz }}{% endif %}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="action-buttons">
+            <a href="{% url 'services' %}" class="btn-explore">{% trans "Xizmatlarimiz" %}</a>
+            <a href="{% url 'contact' %}" class="btn-contact">
+              <i class="bi bi-telephone"></i>
+              {% trans "Bog'lanish" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Departments Section -->
+<section id="featured-departments" class="featured-departments section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>{% trans "Bo'limlarimiz" %}</h2>
+    <p>{% trans "Professional tibbiy xizmatlar ko'rsatadigan bo'limlarimiz bilan tanishing" %}</p>
+  </div>
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="departments-grid">
+      <div class="row">
+        {% for department in departments %}
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+          <div class="department-card">
+            <div class="card-icon">
+              <i class="{{ department.icon }}"></i>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">
+                {% if LANGUAGE_CODE == 'ru' %}{{ department.name_ru }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ department.name_en }}
+                {% else %}{{ department.name_uz }}{% endif %}
+              </h3>
+              <p class="card-description">
+                {% if LANGUAGE_CODE == 'ru' %}{{ department.description_ru|truncatewords:20 }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ department.description_en|truncatewords:20 }}
+                {% else %}{{ department.description_uz|truncatewords:20 }}{% endif %}
+              </p>
+              <a href="{% url 'department-detail' department.pk %}" class="btn btn-sm btn-primary">{% trans "Batafsil" %}</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+          <p>{% trans "Bo'limlar mavjud emas" %}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="departments-cta" data-aos="fade-up" data-aos-delay="600">
+      <div class="cta-content">
+        <h3 class="cta-title">{% trans "Barcha bo'limlar bilan tanishing" %}</h3>
+        <p class="cta-description">{% trans "Bizning professional bo'limlarimiz to'liq tibbiy xizmat ko'rsatadi" %}</p>
+        <a href="{% url 'departments' %}" class="btn btn-primary">{% trans "Barcha bo'limlar" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Services Section -->
+<section id="featured-services" class="featured-services section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>{% trans "Xizmatlarimiz" %}</h2>
+    <p>{% trans "Yuqori sifatli tibbiy xizmatlar" %}</p>
+  </div>
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-4">
+      {% for service in services %}
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="{{ service.icon }}"></i>
+          </div>
+          {% if service.image %}
+          <div class="service-image">
+            <img src="{{ service.image.url }}" alt="{{ service.name_uz }}" class="img-fluid" loading="lazy">
+          </div>
+          {% endif %}
+          <div class="service-content">
+            <h3>
+              {% if LANGUAGE_CODE == 'ru' %}{{ service.name_ru }}
+              {% elif LANGUAGE_CODE == 'en' %}{{ service.name_en }}
+              {% else %}{{ service.name_uz }}{% endif %}
+            </h3>
+            <p>
+              {% if LANGUAGE_CODE == 'ru' %}{{ service.short_description_ru|truncatewords:15 }}
+              {% elif LANGUAGE_CODE == 'en' %}{{ service.short_description_en|truncatewords:15 }}
+              {% else %}{{ service.short_description_uz|truncatewords:15 }}{% endif %}
+            </p>
+            {% if service.price %}
+            <div class="service-price">
+              <span class="price">{{ service.price|floatformat:0 }} {% trans "so'm" %}</span>
+            </div>
+            {% endif %}
+            <a href="{% url 'service-detail' service.pk %}" class="service-link">
+              {% trans "Batafsil" %} <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center">
+        <p>{% trans "Xizmatlar mavjud emas" %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Find A Doctor Section -->
+<section id="find-a-doctor" class="find-a-doctor section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>{% trans "Shifokorlarimiz" %}</h2>
+    <p>{% trans "Malakali mutaxassislar bilan tanishing" %}</p>
+  </div>
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="specialists-showcase" data-aos="fade-up" data-aos-delay="300">
+      {% for doctor in doctors %}
+      <div class="specialist-card{% if forloop.first %} featured{% endif %}" data-aos="slide-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+        <div class="card-content">
+          <div class="specialist-info">
+            <div class="profile-section">
+              <div class="profile-image">
+                {% if doctor.photo %}
+                <img src="{{ doctor.photo.url }}" alt="{{ doctor.full_name }}" class="img-fluid">
+                {% else %}
+                <img src="{% static 'assets/img/health/staff-1.webp' %}" alt="{{ doctor.full_name }}" class="img-fluid">
+                {% endif %}
+                <div class="online-status active"></div>
+              </div>
+              <div class="specialist-data">
+                <h3>{{ doctor.full_name }}</h3>
+                <p class="specialty">
+                  {% if LANGUAGE_CODE == 'ru' %}{{ doctor.specialty_ru }}
+                  {% elif LANGUAGE_CODE == 'en' %}{{ doctor.specialty_en }}
+                  {% else %}{{ doctor.specialty_uz }}{% endif %}
+                </p>
+                <div class="credentials">
+                  <span class="experience">{{ doctor.experience_years }} {% trans "yil tajriba" %}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="quick-actions">
+            <a href="{% url 'appointment' %}" class="action-btn primary">{% trans "Qabulga yozilish" %}</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center">
+        <p>{% trans "Shifokorlar mavjud emas" %}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="700">
+      <a href="{% url 'doctors' %}" class="view-all-link">
+        {% trans "Barcha shifokorlar" %}
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+{% if testimonials %}
+<section id="testimonials" class="testimonials section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>{% trans "Mijozlar fikri" %}</h2>
+    <p>{% trans "Bizning mijozlarimiz biz haqimizda" %}</p>
+  </div>
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-4">
+      {% for testimonial in testimonials %}
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+        <div class="testimonial-item">
+          {% if testimonial.photo %}
+          <img src="{{ testimonial.photo.url }}" class="testimonial-img" alt="{{ testimonial.name }}">
+          {% endif %}
+          <h3>{{ testimonial.name }}</h3>
+          <h4>
+            {% if LANGUAGE_CODE == 'ru' %}{{ testimonial.position_ru }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ testimonial.position_en }}
+            {% else %}{{ testimonial.position_uz }}{% endif %}
+          </h4>
+          <div class="stars">
+            {% for i in "12345"|make_list %}
+              {% if forloop.counter <= testimonial.rating %}
+                <i class="bi bi-star-fill"></i>
+              {% else %}
+                <i class="bi bi-star"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <p>
+            <i class="bi bi-quote quote-icon-left"></i>
+            <span>
+              {% if LANGUAGE_CODE == 'ru' %}{{ testimonial.text_ru|truncatewords:30 }}
+              {% elif LANGUAGE_CODE == 'en' %}{{ testimonial.text_en|truncatewords:30 }}
+              {% else %}{{ testimonial.text_uz|truncatewords:30 }}{% endif %}
+            </span>
+            <i class="bi bi-quote quote-icon-right"></i>
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Call To Action Section -->
+<section id="call-to-action" class="call-to-action section light-background">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="hero-content" data-aos="fade-up" data-aos-delay="200">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="content-wrapper">
+            <h2>{% trans "Sog'ligingiz uchun professional yordam" %}</h2>
+            <p>{% trans "Biz sizning sog'ligingiz uchun har doim tayyormiz. Bizning mutaxassislarimiz bilan bog'laning" %}</p>
+            <div class="action-buttons">
+              <a href="{% url 'appointment' %}" class="primary-btn">{% trans "Qabulga yozilish" %}</a>
+              <a href="{% url 'services' %}" class="secondary-link">
+                <span>{% trans "Xizmatlar" %}</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="hero-image" data-aos="zoom-in" data-aos-delay="300">
+            {% if gallery.2 %}
+            <img src="{{ gallery.2.image.url }}" alt="{% trans 'Xizmat' %}" class="img-fluid">
+            {% else %}
+            <img src="{% static 'assets/img/health/showcase-2.webp' %}" alt="{% trans 'Xizmat' %}" class="img-fluid">
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if statistics %}
+    <div class="stats-section" data-aos="fade-up" data-aos-delay="400">
+      <div class="row">
+        {% for stat in statistics %}
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <div class="stat-number">{{ stat.value }}+</div>
+            <div class="stat-label">
+              {% if LANGUAGE_CODE == 'ru' %}{{ stat.label_ru }}
+              {% elif LANGUAGE_CODE == 'en' %}{{ stat.label_en }}
+              {% else %}{{ stat.label_uz }}{% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if site_settings %}
+    <div class="contact-banner" data-aos="zoom-in" data-aos-delay="600">
+      <div class="banner-content">
+        <div class="contact-info">
+          <div class="contact-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div class="contact-text">
+            <h5>{% trans "Shoshilinch yordam kerakmi?" %}</h5>
+            <p>{% trans "Bizning tibbiy guruhimiz 24/7 aloqada" %}</p>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <a href="tel:{{ site_settings.phone_1 }}" class="call-btn">
+            <i class="fas fa-phone"></i>
+            {{ site_settings.phone_1 }}
+          </a>
+          <a href="{% url 'contact' %}" class="contact-link">{% trans "Manzil" %}</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

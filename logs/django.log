@@ -1,0 +1,41 @@
+[WARNING] 2025-11-11 20:47:53 basehttp "GET /static/assets/img/clients/clients-1.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 20:47:53 basehttp "GET /static/assets/img/clients/clients-2.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 20:47:53 basehttp "GET /static/assets/img/clients/clients-3.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 20:47:53 basehttp "GET /static/assets/img/clients/clients-4.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 20:47:53 basehttp "GET /static/assets/img/clients/clients-5.webp HTTP/1.1" 404 2026
+[ERROR] 2025-11-11 20:47:54 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 20:47:56 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 20:48:03 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 20:48:05 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 20:48:06 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 20:48:10 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 20:56:10 views Index page error: 'block' tag with name 'title' appears more than once
+[ERROR] 2025-11-11 20:56:10 basehttp "GET / HTTP/1.1" 500 386057
+[ERROR] 2025-11-11 20:57:41 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 21:05:54 basehttp "GET /departments/ HTTP/1.1" 500 184214
+[ERROR] 2025-11-11 21:06:45 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 21:06:46 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 21:06:47 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 21:06:47 views Departments page error: property 'services_count' of 'Department' object has no setter
+[ERROR] 2025-11-11 21:06:47 views Departments page error: property 'services_count' of 'Department' object has no setter
+[WARNING] 2025-11-11 21:11:00 basehttp "GET /static/assets/img/clients/clients-1.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:11:00 basehttp "GET /static/assets/img/clients/clients-2.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:11:00 basehttp "GET /static/assets/img/clients/clients-3.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:11:00 basehttp "GET /static/assets/img/clients/clients-4.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:11:00 basehttp "GET /static/assets/img/clients/clients-5.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:29:56 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6575
+[WARNING] 2025-11-11 21:29:58 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6575
+[WARNING] 2025-11-11 21:30:02 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6575
+[WARNING] 2025-11-11 21:30:13 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6575
+[WARNING] 2025-11-11 21:30:15 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6575
+[WARNING] 2025-11-11 21:31:07 basehttp "GET /favicon.ico HTTP/1.1" 404 6464
+[WARNING] 2025-11-11 21:48:12 basehttp "GET /static/assets/img/clients/clients-1.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:12 basehttp "GET /static/assets/img/clients/clients-2.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:12 basehttp "GET /static/assets/img/clients/clients-3.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:12 basehttp "GET /static/assets/img/clients/clients-4.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:12 basehttp "GET /static/assets/img/clients/clients-5.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:16 basehttp "GET /static/assets/img/clients/clients-1.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:16 basehttp "GET /static/assets/img/clients/clients-2.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:16 basehttp "GET /static/assets/img/clients/clients-3.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:16 basehttp "GET /static/assets/img/clients/clients-5.webp HTTP/1.1" 404 2026
+[WARNING] 2025-11-11 21:48:16 basehttp "GET /static/assets/img/clients/clients-4.webp HTTP/1.1" 404 2026

@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Qabulga yozilish" %} - {{ site_settings.site_name_uz }}{% endblock %}
+{% block body_class %}appointment-page{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="page-title">
+  <div class="heading">
+    <div class="container">
+      <div class="row d-flex justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="heading-title">{% trans "Qabulga yozilish" %}</h1>
+          <p class="mb-0">
+            {% trans "Quyidagi formani to'ldiring va biz siz bilan tez orada bog'lanamiz. Barcha ma'lumotlar maxfiy saqlanadi." %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'index' %}">{% trans "Bosh sahifa" %}</a></li>
+        <li class="current">{% trans "Qabulga yozilish" %}</li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+<!-- Appointment Section -->
+<section id="appointmnet" class="appointmnet section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    {% if messages %}
+    <div class="row">
+      <div class="col-12">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="row gy-4">
+      <!-- Appointment Info -->
+      <div class="col-lg-6">
+        <div class="appointment-info">
+          <h3>{% trans "Tez va oson onlayn yozilish" %}</h3>
+          <p class="mb-4">{% trans "Bir necha oddiy qadamda qabulga yoziling. Bizning tibbiy mutaxassislarimiz sizga eng yaxshi xizmatni ko'rsatishga tayyor." %}</p>
+
+          <div class="info-items">
+            <div class="info-item d-flex align-items-center mb-3" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon-wrapper me-3">
+                <i class="bi bi-calendar-check"></i>
+              </div>
+              <div>
+                <h5>{% trans "Moslashuvchan jadval" %}</h5>
+                <p class="mb-0">{% trans "Sizga qulay vaqtni tanlang" %}</p>
+              </div>
+            </div>
+
+            <div class="info-item d-flex align-items-center mb-3" data-aos="fade-up" data-aos-delay="250">
+              <div class="icon-wrapper me-3">
+                <i class="bi bi-stopwatch"></i>
+              </div>
+              <div>
+                <h5>{% trans "Tez javob" %}</h5>
+                <p class="mb-0">{% trans "Arizangizni yuborganingizdan keyin 15 daqiqa ichida javob olamiz" %}</p>
+              </div>
+            </div>
+
+            <div class="info-item d-flex align-items-center mb-3" data-aos="fade-up" data-aos-delay="300">
+              <div class="icon-wrapper me-3">
+                <i class="bi bi-shield-check"></i>
+              </div>
+              <div>
+                <h5>{% trans "Mutaxassis tibbiy yordam" %}</h5>
+                <p class="mb-0">{% trans "Sertifikatlangan shifokorlar va mutaxassislar xizmatingizda" %}</p>
+              </div>
+            </div>
+          </div>
+
+          {% if site_settings %}
+          <div class="emergency-contact mt-4" data-aos="fade-up" data-aos-delay="350">
+            <div class="emergency-card p-3">
+              <h6 class="mb-2"><i class="bi bi-telephone-fill me-2"></i>{% trans "Shoshilinch aloqa" %}</h6>
+              <p class="mb-0">{% trans "Shoshilinch tibbiy yordam uchun qo'ng'iroq qiling" %} <strong>{{ site_settings.phone_1 }}</strong></p>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Appointment Form -->
+      <div class="col-lg-6">
+        <div class="appointment-form-wrapper" data-aos="fade-up" data-aos-delay="200">
+          <form method="post" class="appointment-form">
+            {% csrf_token %}
+            <div class="row gy-3">
+
+              <div class="col-md-6">
+                {{ form.name }}
+                {% if form.name.errors %}
+                <div class="text-danger small">{{ form.name.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="text-danger small">{{ form.email.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                <div class="text-danger small">{{ form.phone.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                {{ form.department }}
+                {% if form.department.errors %}
+                <div class="text-danger small">{{ form.department.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                {{ form.date }}
+                {% if form.date.errors %}
+                <div class="text-danger small">{{ form.date.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                {{ form.doctor }}
+                {% if form.doctor.errors %}
+                <div class="text-danger small">{{ form.doctor.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                {{ form.service }}
+                {% if form.service.errors %}
+                <div class="text-danger small">{{ form.service.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                {{ form.time }}
+                {% if form.time.errors %}
+                <div class="text-danger small">{{ form.time.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-12">
+                {{ form.message }}
+                {% if form.message.errors %}
+                <div class="text-danger small">{{ form.message.errors }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-12">
+                <button type="submit" class="btn btn-appointment w-100">
+                  <i class="bi bi-calendar-plus me-2"></i>{% trans "Qabulga yozilish" %}
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Process Steps -->
+    <div class="process-steps mt-5" data-aos="fade-up" data-aos-delay="300">
+      <div class="row text-center gy-4">
+        <div class="col-lg-3 col-md-6">
+          <div class="step-item">
+            <div class="step-number">1</div>
+            <div class="step-icon">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <h5>{% trans "Ma'lumotlarni kiriting" %}</h5>
+            <p>{% trans "Shaxsiy ma'lumotlaringiz va tanlagan bo'limingizni kiriting" %}</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="step-item">
+            <div class="step-number">2</div>
+            <div class="step-icon">
+              <i class="bi bi-calendar-event"></i>
+            </div>
+            <h5>{% trans "Sanani tanlang" %}</h5>
+            <p>{% trans "Mavjud vaqtlardan o'zingizga qulay sanani tanlang" %}</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="step-item">
+            <div class="step-number">3</div>
+            <div class="step-icon">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <h5>{% trans "Tasdiqlash" %}</h5>
+            <p>{% trans "Email yoki SMS orqali tasdiqlash xabarini oling" %}</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="step-item">
+            <div class="step-number">4</div>
+            <div class="step-icon">
+              <i class="bi bi-heart-pulse"></i>
+            </div>
+            <h5>{% trans "Davolanish" %}</h5>
+            <p>{% trans "Belgilangan vaqtda klinikamizga tashrif buyuring" %}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form dinamik funksiyalari
+document.addEventListener('DOMContentLoaded', function() {
+    // Department o'zgarishi
+    const deptSelect = document.querySelector('select[name="department"]');
+    const doctorSelect = document.querySelector('select[name="doctor"]');
+    const serviceSelect = document.querySelector('select[name="service"]');
+
+    if (deptSelect && doctorSelect && serviceSelect) {
+        deptSelect.addEventListener('change', function() {
+            const deptId = this.value;
+            // AJAX orqali shifokorlar va xizmatlarni yuklash
+            // Bu yerda AJAX kod bo'lishi mumkin
+        });
+    }
+
+    // Minimum sana - bugun
+    const dateInput = document.querySelector('input[type="date"]');
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+    }
+});
+</script>
+{% endblock %}

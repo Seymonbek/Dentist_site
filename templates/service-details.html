@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% if LANGUAGE_CODE == 'ru' %}{{ service.name_ru }}
+{% elif LANGUAGE_CODE == 'en' %}{{ service.name_en }}
+{% else %}{{ service.name_uz }}{% endif %} - {{ site_settings.site_name_uz }}
+{% endblock %}
+
+{% block body_class %}service-details-page{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="page-title">
+  <div class="heading">
+    <div class="container">
+      <div class="row d-flex justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="heading-title">
+            {% if LANGUAGE_CODE == 'ru' %}{{ service.name_ru }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ service.name_en }}
+            {% else %}{{ service.name_uz }}{% endif %}
+          </h1>
+          <p class="mb-0">
+            {% if LANGUAGE_CODE == 'ru' %}{{ service.short_description_ru }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ service.short_description_en }}
+            {% else %}{{ service.short_description_uz }}{% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'index' %}">{% trans "Bosh sahifa" %}</a></li>
+        <li><a href="{% url 'services' %}">{% trans "Xizmatlar" %}</a></li>
+        <li class="current">
+          {% if LANGUAGE_CODE == 'ru' %}{{ service.name_ru|truncatewords:3 }}
+          {% elif LANGUAGE_CODE == 'en' %}{{ service.name_en|truncatewords:3 }}
+          {% else %}{{ service.name_uz|truncatewords:3 }}{% endif %}
+        </li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+<!-- Service Details Section -->
+<section id="service-details-2" class="service-details-2 section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <div class="row gy-5">
+      <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="200">
+        <div class="service-image">
+          {% if service.image %}
+          <img src="{{ service.image.url }}" alt="{{ service.name_uz }}" class="img-fluid">
+          {% else %}
+          <img src="{% static 'assets/img/health/cardiology-3.webp' %}" alt="{{ service.name_uz }}" class="img-fluid">
+          {% endif %}
+          <div class="service-tag">
+            <span>{% trans "Professional xizmat" %}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+        <div class="service-content">
+          <div class="service-category mb-3">
+            <i class="{{ service.department.icon }} me-2"></i>
+            {% if LANGUAGE_CODE == 'ru' %}{{ service.department.name_ru }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ service.department.name_en }}
+            {% else %}{{ service.department.name_uz }}{% endif %}
+          </div>
+          
+          <h2>
+            {% if LANGUAGE_CODE == 'ru' %}{{ service.name_ru }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ service.name_en }}
+            {% else %}{{ service.name_uz }}{% endif %}
+          </h2>
+          
+          <p class="service-tagline">{% trans "Ilg'or texnologiya va mehr-shafqatli tajriba bilan professional xizmat" %}</p>
+
+          <div class="service-description">
+            {% if LANGUAGE_CODE == 'ru' %}{{ service.description_ru|linebreaks }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ service.description_en|linebreaks }}
+            {% else %}{{ service.description_uz|linebreaks }}{% endif %}
+          </div>
+
+          <div class="service-info-boxes">
+            {% if service.price %}
+            <div class="info-box">
+              <div class="icon"><i class="bi bi-cash-coin"></i></div>
+              <div class="content">
+                <h5>{% trans "Narxi" %}</h5>
+                <p>{{ service.price|floatformat:0 }} {% trans "so'm" %}</p>
+              </div>
+            </div>
+            {% endif %}
+            
+            {% if service.duration %}
+            <div class="info-box">
+              <div class="icon"><i class="bi bi-clock"></i></div>
+              <div class="content">
+                <h5>{% trans "Davomiyligi" %}</h5>
+                <p>{{ service.duration }} {% trans "daqiqa" %}</p>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="service-actions">
+            <a href="{% url 'appointment' %}" class="btn-primary">{% trans "Qabulga yozilish" %}</a>
+            {% if site_settings %}
+            <a href="tel:{{ site_settings.phone_1 }}" class="btn-secondary">
+              <i class="bi bi-telephone"></i> {% trans "Qo'ng'iroq" %}
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Features -->
+    <div class="row mt-5">
+      <div class="col-lg-12" data-aos="fade-up" data-aos-delay="400">
+        <div class="features-section">
+          <h3>{% trans "Xizmat xususiyatlari" %}</h3>
+          <div class="row gy-4 mt-3">
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="service-card">
+                <div class="card-icon">
+                  <i class="bi bi-heart-pulse"></i>
+                </div>
+                <h4>{% trans "Diagnostika" %}</h4>
+                <p>{% trans "Zamonaviy diagnostika usullari va aniq natijalar" %}</p>
+              </div>
+            </div>
+
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+              <div class="service-card">
+                <div class="card-icon">
+                  <i class="bi bi-hospital"></i>
+                </div>
+                <h4>{% trans "Davolash" %}</h4>
+                <p>{% trans "Professional davolash va individual yondashuv" %}</p>
+              </div>
+            </div>
+
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+              <div class="service-card">
+                <div class="card-icon">
+                  <i class="bi bi-shield-check"></i>
+                </div>
+                <h4>{% trans "Profilaktika" %}</h4>
+                <p>{% trans "Kasallikning oldini olish va sog'lom turmush tarzi" %}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Services -->
+    {% if related_services %}
+    <div class="row mt-5">
+      <div class="col-lg-12" data-aos="fade-up" data-aos-delay="500">
+        <h3>{% trans "Bog'liq xizmatlar" %}</h3>
+        <div class="row gy-4 mt-3">
+          {% for related in related_services %}
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+            <div class="related-service-card">
+              <div class="icon">
+                <i class="{{ related.icon }}"></i>
+              </div>
+              <h4>
+                {% if LANGUAGE_CODE == 'ru' %}{{ related.name_ru }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ related.name_en }}
+                {% else %}{{ related.name_uz }}{% endif %}
+              </h4>
+              <p>
+                {% if LANGUAGE_CODE == 'ru' %}{{ related.short_description_ru|truncatewords:15 }}
+                {% elif LANGUAGE_CODE == 'en' %}{{ related.short_description_en|truncatewords:15 }}
+                {% else %}{{ related.short_description_uz|truncatewords:15 }}{% endif %}
+              </p>
+              <a href="{% url 'service-detail' related.pk %}" class="card-link">
+                <span>{% trans "Batafsil" %}</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Booking Section -->
+    <div class="row mt-5">
+      <div class="col-lg-8" data-aos="fade-right" data-aos-delay="100">
+        <div class="booking-section">
+          <h3>{% trans "Uchrashuvni rejalashtirishga tayyormisiz?" %}</h3>
+          <p>{% trans "Bizning mutaxassislarimiz maslahatlashish uchun dushanba-juma kunlari mavjud. Shoshilinch holatlar uchun bir kun ichida uchrashuvlar mavjud." %}</p>
+
+          {% if site_settings %}
+          <div class="availability-info">
+            <div class="info-item">
+              <i class="bi bi-clock"></i>
+              <div>
+                <strong>{% trans "Ish vaqti" %}</strong>
+                <span>
+                  {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.working_hours_ru }}
+                  {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.working_hours_en }}
+                  {% else %}{{ site_settings.working_hours_uz }}{% endif %}
+                </span>
+              </div>
+            </div>
+            <div class="info-item">
+              <i class="bi bi-telephone"></i>
+              <div>
+                <strong>{% trans "Shoshilinch liniya" %}</strong>
+                <span>{{ site_settings.phone_1 }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <i class="bi bi-geo-alt"></i>
+              <div>
+                <strong>{% trans "Joylashuv" %}</strong>
+                <span>
+                  {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.address_ru }}
+                  {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.address_en }}
+                  {% else %}{{ site_settings.address_uz }}{% endif %}
+                </span>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-lg-4" data-aos="fade-left" data-aos-delay="200">
+        <div class="appointment-card">
+          <h4>{% trans "Tashrifingizni belgilang" %}</h4>
+          <p>{% trans "Tez va oson onlayn rejalashtirish" %}</p>
+          <a href="{% url 'appointment' %}" class="btn-appointment">{% trans "Qabulga yozilish" %}</a>
+          <div class="contact-alternative">
+            <span>{% trans "Yoki bizga qo'ng'iroq qiling" %}</span>
+            {% if site_settings %}
+            <a href="tel:{{ site_settings.phone_1 }}">{{ site_settings.phone_1 }}</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Aloqa" %} - {{ site_settings.site_name_uz }}{% endblock %}
+{% block body_class %}contact-page{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="page-title">
+  <div class="heading">
+    <div class="container">
+      <div class="row d-flex justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="heading-title">{% trans "Biz bilan bog'laning" %}</h1>
+          <p class="mb-0">
+            {% trans "Savollaringiz bormi? Biz bilan bog'laning va biz sizga yordam beramiz. Xabaringizni qoldiring va tez orada javob beramiz." %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'index' %}">{% trans "Bosh sahifa" %}</a></li>
+        <li class="current">{% trans "Aloqa" %}</li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+<!-- Contact Section -->
+<section id="contact" class="contact section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    
+    {% if messages %}
+    <div class="row">
+      <div class="col-12">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if site_settings %}
+    <div class="row gy-4">
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="info-box">
+          <i class="bi bi-geo-alt"></i>
+          <h3>{% trans "Manzilimiz" %}</h3>
+          <p>
+            {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.address_ru }}
+            {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.address_en }}
+            {% else %}{{ site_settings.address_uz }}{% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="info-box">
+          <i class="bi bi-telephone"></i>
+          <h3>{% trans "Telefon raqamlarimiz" %}</h3>
+          <p>
+            {{ site_settings.phone_1 }}<br>
+            {% if site_settings.phone_2 %}{{ site_settings.phone_2 }}{% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
+        <div class="info-box">
+          <i class="bi bi-envelope"></i>
+          <h3>{% trans "Email manzilarimiz" %}</h3>
+          <p>{{ site_settings.email }}</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="row gy-4 mt-4">
+      {% if site_settings.google_maps_embed %}
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
+        <div class="map-container">
+          {{ site_settings.google_maps_embed|safe }}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="col-lg-{% if site_settings.google_maps_embed %}6{% else %}12{% endif %}" data-aos="fade-up" data-aos-delay="600">
+        <form method="post" class="php-email-form">
+          {% csrf_token %}
+          <div class="row gy-3">
+            <div class="col-md-6">
+              {{ form.name }}
+              {% if form.name.errors %}
+              <div class="text-danger small">{{ form.name.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="col-md-6">
+              {{ form.email }}
+              {% if form.email.errors %}
+              <div class="text-danger small">{{ form.email.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="col-md-12">
+              {{ form.subject }}
+              {% if form.subject.errors %}
+              <div class="text-danger small">{{ form.subject.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="col-md-12">
+              {{ form.message }}
+              {% if form.message.errors %}
+              <div class="text-danger small">{{ form.message.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="col-md-12 text-center">
+              <button type="submit">{% trans "Xabar yuborish" %}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if site_settings %}
+    <div class="social-links text-center mt-5" data-aos="zoom-in" data-aos-delay="700">
+      {% if site_settings.twitter %}<a href="{{ site_settings.twitter }}"><i class="bi bi-twitter"></i></a>{% endif %}
+      {% if site_settings.facebook %}<a href="{{ site_settings.facebook }}"><i class="bi bi-facebook"></i></a>{% endif %}
+      {% if site_settings.instagram %}<a href="{{ site_settings.instagram }}"><i class="bi bi-instagram"></i></a>{% endif %}
+      {% if site_settings.linkedin %}<a href="{{ site_settings.linkedin }}"><i class="bi bi-linkedin"></i></a>{% endif %}
+      {% if site_settings.youtube %}<a href="{{ site_settings.youtube }}"><i class="bi bi-youtube"></i></a>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Working Hours Section -->
+{% if site_settings %}
+<section class="working-hours section light-background">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h3>{% trans "Ish vaqtimiz" %}</h3>
+        <p class="lead">
+          {% if LANGUAGE_CODE == 'ru' %}{{ site_settings.working_hours_ru }}
+          {% elif LANGUAGE_CODE == 'en' %}{{ site_settings.working_hours_en }}
+          {% else %}{{ site_settings.working_hours_uz }}{% endif %}
+        </p>
+        <div class="mt-4">
+          <a href="{% url 'appointment' %}" class="btn btn-primary btn-lg">{% trans "Qabulga yozilish" %}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
