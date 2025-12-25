@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}DentCare - Professional Stomatologiya Klinikasi | Toshkent{% endblock %}
+{% block body_class %}index-page{% endblock %}
+{% block page_title %}{% endblock %}
+
+{% block content %}
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-5">
+            <div class="hero-image" data-aos="fade-right" data-aos-delay="100">
+              {% if chief_doctor.photo %}
+                <img src="{{ chief_doctor.photo.url }}" alt="{{ chief_doctor.get_full_name }}" class="img-fluid main-image">
+              {% else %}
+                <img src="{% static 'assets/img/health/staff-8.webp' %}" alt="Default" class="img-fluid main-image">
+              {% endif %}
+              <div class="floating-card emergency-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-content">
+                  <i class="bi bi-telephone-fill"></i>
+                  <div class="text">
+                    <span>Dr. {{ chief_doctor.first_name }} {{ chief_doctor.last_name }}</span>
+                    <span class="number">{{ chief_doctor.phone|default:"+998 71 123 45 67" }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="floating-card stats-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="stat-item">
+                  <span class="number">15K+</span>
+                  <span class="label">Davolangan Bemorlar</span>
+                </div>
+                <div class="stat-item">
+                  <span class="number">98%</span>
+                  <span class="label">Mamnun Bemorlar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="hero-content" data-aos="fade-left" data-aos-delay="200">
+              <div class="badge-container">
+                <span class="hero-badge">Ishonchli Stomatologiya Klinikasi</span>
+              </div>
+
+              <h1 class="hero-title">Zamonaviy Stomatologiya Xizmatlari</h1>
+              <p class="hero-description">Biz sizning tabassum sog'ligingiz uchun javobgarmiz. Zamonaviy uskunalar, tajribali mutaxassislar va bemorga g'amxo'rlik - DentCare standartlari!</p>
+
+              <div class="hero-stats">
+                <div class="stat-group">
+                  <div class="stat">
+                    <i class="bi bi-award"></i>
+                    <div class="stat-text">
+                      <span class="number">10+</span>
+                      <span class="label">Yillik Tajriba</span>
+                    </div>
+                  </div>
+                  <div class="stat">
+                    <i class="bi bi-people"></i>
+                    <div class="stat-text">
+                      <span class="number">25+</span>
+                      <span class="label">Tish Shifokorlari</span>
+                    </div>
+                  </div>
+                  <div class="stat">
+                    <i class="bi bi-geo-alt"></i>
+                    <div class="stat-text">
+                      <span class="number">1</span>
+                      <span class="label">Klinika Filiali</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cta-section">
+                <div class="cta-buttons">
+                  <a href="{% url 'appointment' %}" class="btn btn-primary">Qabulga Yozilish</a>
+                  <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="btn btn-secondary glightbox">
+                    <i class="bi bi-play-circle"></i>
+                    Bizning Hikoyamiz
+                  </a>
+                </div>
+
+                <div class="quick-actions">
+                  <a href="{% url 'appointment' %}" class="action-link">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Bo'sh Vaqtlarni Ko'rish</span>
+                  </a>
+                  <a href="{% url 'contact' %}" class="action-link">
+                    <i class="bi bi-chat-dots"></i>
+                    <span>Onlayn Maslahat</span>
+                  </a>
+                  <a href="{% url 'services' %}" class="action-link">
+                    <i class="bi bi-file-medical"></i>
+                    <span>Xizmatlar</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="background-elements">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-pattern"></div>
+      </div>
+    </section><!-- /Hero Section -->
+
+    <!-- Home About Section -->
+    <section id="home-about" class="home-about section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-delay="150">
+            <h2 class="section-heading">Stomatologiyada A'lo Darajadagi Xizmat</h2>
+            <p class="lead-description">Biz zamonaviy texnologiyalar, innovatsion usullar va bemor g'amxo'rligini birlashtirib, har bir insonning tabassumini yanada go'zal qilishga intilamiz.</p>
+          </div>
+        </div>
+
+        <div class="row align-items-center gy-5">
+          <div class="col-lg-7" data-aos="fade-right" data-aos-delay="200">
+            <div class="image-grid">
+              <div class="primary-image">
+                {% if gallery_photos.0 %}
+                  <img src="{{ gallery_photos.0.image.url }}" alt="{{ gallery_photos.0.title }}" class="img-fluid">
+                {% else %}
+                  <img src="{% static 'assets/img/health/facilities-6.webp' %}" alt="Default" class="img-fluid">
+                {% endif %}
+                <div class="certification-badge">
+                  <i class="bi bi-award"></i>
+                  <span>ISO Sertifikatlangan</span>
+                </div>
+              </div>
+
+              <div class="secondary-images">
+                <div class="small-image">
+                  {% if gallery_photos.1 %}
+                    <img src="{{ gallery_photos.1.image.url }}" alt="{{ gallery_photos.1.title }}" class="img-fluid">
+                  {% else %}
+                    <img src="{% static 'assets/img/health/consultation-3.webp' %}" alt="Default" class="img-fluid">
+                  {% endif %}
+                </div>
+                <div class="small-image">
+                  {% if gallery_photos.2 %}
+                    <img src="{{ gallery_photos.2.image.url }}" alt="{{ gallery_photos.2.title }}" class="img-fluid">
+                  {% else %}
+                    <img src="{% static 'assets/img/health/surgery-2.webp' %}" alt="Default" class="img-fluid">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5" data-aos="fade-left" data-aos-delay="300">
+            <div class="content-wrapper">
+              <div class="highlight-box">
+                <div class="highlight-icon">
+                  <i class="bi bi-heart-pulse-fill"></i>
+                </div>
+                <div class="highlight-content">
+                  <h4>Bemorga Individual Yondashuv</h4>
+                  <p>Har bir bemor uchun maxsus davolash rejasi va tibbiy tarix asosida individual yondashuv.</p>
+                </div>
+              </div>
+
+              <div class="feature-list">
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="feature-text">Zamonaviy diagnostika uskunalari va rentgen</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="feature-text">Malakali va tajribali tish shifokorlari</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="feature-text">Og'riqsiz davolash usullari</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </div>
+                  <div class="feature-text">24/7 shoshilinch tish yordami</div>
+                </div>
+              </div>
+
+              <div class="metrics-row">
+                <div class="metric-box">
+                  <div class="metric-number">
+                    <span class="purecounter" data-purecounter-start="0" data-purecounter-end="98" data-purecounter-duration="0">98</span>%
+                  </div>
+                  <div class="metric-label">Mamnun Bemorlar</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-number">
+                    <span class="purecounter" data-purecounter-start="0" data-purecounter-end="15" data-purecounter-duration="0">15</span>K+
+                  </div>
+                  <div class="metric-label">Davolangan Bemorlar</div>
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <a href="{% url 'about' %}" class="btn-explore">Biz Haqimizda</a>
+                <a href="{% url 'contact' %}" class="btn-contact">
+                  <i class="bi bi-telephone"></i>
+                  Maslahat Olish
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Home About Section -->
+
+    <!-- Featured Departments Section -->
+    <section id="featured-departments" class="featured-departments section">
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Bizning Bo'limlar</h2>
+        <p>Har bir bo'limda yuqori malakali mutaxassislar sizning xizmat xizmatida</p>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="departments-showcase">
+
+          <div class="featured-department" data-aos="fade-up" data-aos-delay="200">
+            <div class="row align-items-center">
+              <div class="col-lg-6 order-lg-1">
+                <div class="department-content">
+                  <div class="department-category">Tezkor Yordam</div>
+                  <h2 class="department-title">24/7 Shoshilinch Tish Yordami</h2>
+                  <p class="department-description">Kechayu kunduz ishlaydi xizmat! Og'riq paydo bo'lsa yoki shoshilinch holatlarda biz doimo tayyormiz. Tajribali shifokorlar darhol yordam beradi.</p>
+                  <div class="department-features">
+                    <div class="feature-item">
+                      <i class="fas fa-check-circle"></i>
+                      <span>Og'riqni tezda bartaraf etish</span>
+                    </div>
+                    <div class="feature-item">
+                      <i class="fas fa-check-circle"></i>
+                      <span>Shoshilinch operatsiyalar</span>
+                    </div>
+                    <div class="feature-item">
+                      <i class="fas fa-check-circle"></i>
+                      <span>Vaqtida ko'rsatilgan yordam</span>
+                    </div>
+                  </div>
+                  <a href="{% url 'contact' %}" class="cta-link">Batafsil <i class="fas fa-arrow-right"></i></a>
+                </div>
+              </div>
+              <div class="col-lg-6 order-lg-2">
+                <div class="department-visual">
+                  <div class="image-wrapper">
+                    {% if gallery_photos.2 %}
+                    <img src="{{ gallery_photos.2.image.url }}" alt="{{ gallery_photos.2.title }}" class="img-fluid">
+                    {% else %}
+                      <img src="{% static 'assets/img/health/surgery-2.webp' %}" alt="Default" class="img-fluid">
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="departments-cta" data-aos="fade-up" data-aos-delay="600">
+            <div class="cta-content">
+              <h3 class="cta-title">Barcha Stomatologiya Bo'limlarini Ko'ring</h3>
+              <p class="cta-description">Bizning klinikada siz har qanday tish muammosini hal qila olasiz - professional shifokorlar va zamonaviy uskunalar yordamida.</p>
+              <a href="{% url 'departments' %}" class="btn btn-primary">Barcha Bo'limlar</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Featured Departments Section -->
+
+    <!-- Call To Action Section -->
+    <section id="call-to-action" class="call-to-action section light-background">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="hero-content" data-aos="fade-up" data-aos-delay="200">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="content-wrapper">
+                <h2>Tabassumingiz Bizning G'ururimiz</h2>
+                <p>Professional stomatologiya xizmatlarini tajribali shifokorlar va zamonaviy texnologiyalar bilan kashf eting. Bizda har bir bemor o'zini maxsus his qiladi.</p>
+
+                <div class="action-buttons">
+                  <a href="{% url 'appointment' %}" class="primary-btn">Qabulga Yozilish</a>
+                  <a href="{% url 'services' %}" class="secondary-link">
+                    <span>Xizmatlar</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="hero-image" data-aos="zoom-in" data-aos-delay="300">
+                <img src="{% static 'assets/img/health/showcase-2.webp' %}" alt="Stomatologiya xizmatlari" class="img-fluid">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-section" data-aos="fade-up" data-aos-delay="400">
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+              <div class="stat-item">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Yillik Tajriba</div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="stat-item">
+                <div class="stat-number">15K+</div>
+                <div class="stat-label">Mamnun Bemorlar</div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="stat-item">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Malakali Shifokorlar</div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Tez Yordam</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-banner" data-aos="zoom-in" data-aos-delay="600">
+          <div class="banner-content">
+            <div class="contact-info">
+              <div class="contact-icon">
+                <i class="fas fa-phone"></i>
+              </div>
+              <div class="contact-text">
+                <h5>Shoshilinch Yordam Kerakmi?</h5>
+                <p>Bizning tish shifokori jamoasi 24/7 shoshilinch maslahat va yordam uchun tayyor.</p>
+              </div>
+            </div>
+            <div class="contact-actions">
+              <a href="tel:+998711234567" class="call-btn">
+                <i class="fas fa-phone"></i>
+                {{ chief_doctor.phone|default:"+998 99 621 27 70" }}
+              </a>
+              <a href="{% url 'contact' %}" class="contact-link">Yo'l Topish</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Call To Action Section -->
+
+{% endblock %}

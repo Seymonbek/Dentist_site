@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Foydalanish Shartlari - DentCare{% endblock %}
+{% block heading_title %}Foydalanish Shartlari{% endblock %}
+{% block heading_desc %}Saytimizdan foydalanish qoidalari va shartlari{% endblock %}
+{% block breadcrumb %}Foydalanish Shartlari{% endblock %}
+
+{% block content %}
+
+    <!-- Terms Of Service Section -->
+    <section id="terms-of-service" class="terms-of-service section">
+
+      <div class="container" data-aos="fade-up">
+        <div class="tos-header text-center" data-aos="fade-up">
+          <span class="last-updated">Oxirgi Yangilanish: 15 Dekabr 2024</span>
+          <h2>Foydalanish Shartlari</h2>
+          <p>Iltimos, xizmatlarimizdan foydalanishdan oldin ushbu shartlarni diqqat bilan o'qing</p>
+        </div>
+
+        <div class="tos-content" data-aos="fade-up" data-aos-delay="200">
+          <div id="agreement" class="content-section">
+            <h3>1. Shartlarga Rozilik</h3>
+            <p>Saytimizga kirish va xizmatlarimizdan foydalanish orqali siz ushbu Foydalanish Shartlariga va barcha qonunlarga rioya qilishga rozilik bildirasiz. Agar siz ushbu shartlarning biron-bir qismiga rozi bo'lmasangiz, xizmatlarimizdan foydalanish taqiqlanadi.</p>
+            <div class="info-box">
+              <i class="bi bi-info-circle"></i>
+              <p>Ushbu shartlar barcha foydalanuvchilar, tashrif buyuruvchilar va xizmatlarimizga kiradigan yoki foydalanadigan boshqalarga taalluqlidir.</p>
+            </div>
+          </div>
+
+          <div id="services" class="content-section">
+            <h3>2. Tibbiy Xizmatlar</h3>
+            <p>DentCare professional stomatologiya xizmatlari ko'rsatadi. Barcha xizmatlar litsenziyalangan tish shifokorlari tomonidan amalga oshiriladi.</p>
+            <ul class="list-items">
+              <li>Qabulga yozilish onlayn yoki telefon orqali amalga oshiriladi</li>
+              <li>Qabul vaqtini kamida 24 soat oldin bekor qilish kerak</li>
+              <li>Shoshilinch holatlar uchun 24/7 xizmat mavjud</li>
+              <li>Barcha xizatlarga kafolat beriladi</li>
+            </ul>
+          </div>
+
+          <div id="payment" class="content-section">
+            <h3>3. To'lov va Narxlar</h3>
+            <p>Barcha narxlar O'zbekiston so'mida ko'rsatilgan. Biz naqd pul va plastik kartalar orqali to'lovni qabul qilamiz.</p>
+            <div class="alert-box">
+              <i class="bi bi-exclamation-triangle"></i>
+              <div class="alert-content">
+                <h5>Muhim Eslatma</h5>
+                <p>Qimmat xizmatlar uchun bo'lib-bo'lib to'lash imkoniyati mavjud. Batafsil ma'lumot uchun administratorlar bilan bog'laning.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="appointments" class="content-section">
+            <h3>4. Qabul va Bekor Qilish</h3>
+            <p>Qabulga yozilish vaqtini bekor qilish yoki o'zgartirish uchun kamida 24 soat oldin xabar berish kerak.</p>
+            <div class="prohibited-list">
+              <div class="prohibited-item">
+                <i class="bi bi-x-circle"></i>
+                <span>Xabarsiz qabulga kelmagan 3 martadan keyin qabulga yozilish cheklanishi mumkin</span>
+              </div>
+              <div class="prohibited-item">
+                <i class="bi bi-x-circle"></i>
+                <span>Kechikish 15 daqiqadan oshsa, qabul bekor qilinishi mumkin</span>
+              </div>
+              <div class="prohibited-item">
+                <i class="bi bi-check-circle text-success"></i>
+                <span>Shoshilinch holatlar uchun bir xil kunlik qabul mavjud</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="warranty" class="content-section">
+            <h3>5. Kafolat Shartlari</h3>
+            <p>Biz barcha xizmatlarimizga kafolat beramiz. Kafolat muddati xizmat turiga qarab farqlanadi.</p>
+            <div class="disclaimer-box">
+              <p>Kafolat qamrab oladi:</p>
+              <ul>
+                <li>Plombalarga - 1 yil</li>
+                <li>Protezlarga - 2 yil</li>
+                <li>Implantlarga - umrbod</li>
+                <li>Ortodontik davoga - davolash tugaguncha</li>
+              </ul>
+            </div>
+          </div>
+
+          <div id="privacy" class="content-section">
+            <h3>6. Maxfiylik va Ma'lumotlar</h3>
+            <p>Biz bemorlar ma'lumotlarini qat'iy maxfiy tutamiz va uchinchi shaxslarga bermymiz. Barcha tibbiy ma'lumotlar xavfsiz saqlanadi.</p>
+          </div>
+
+          <div id="liability" class="content-section">
+            <h3>7. Mas'uliyat Cheklovi</h3>
+            <p>Biz professional xizmat ko'rsatishga intilamiz, lekin ba'zi hollarda kutilmagan natijalar yuzaga kelishi mumkin. Bunday holatlarda mas'uliyat O'zbekiston qonunchiligiga muvofiq belgilanadi.</p>
+          </div>
+
+          <div id="changes" class="content-section">
+            <h3>8. Shartlarga O'zgartirishlar</h3>
+            <p>Biz istalgan vaqtda ushbu Shartlarni o'zgartirish yoki almashtirish huquqini saqlab qolamiz. Barcha o'zgarishlar ushbu sahifada e'lon qilinadi.</p>
+            <div class="notice-box">
+              <i class="bi bi-bell"></i>
+              <p>O'zgarishlar kuchga kirganidan keyin xizmatlarimizdan foydalanishda davom etish orqali yangi shartlarga rozilik bildirasiz.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tos-contact" data-aos="fade-up" data-aos-delay="300">
+          <div class="contact-box">
+            <div class="contact-icon">
+              <i class="bi bi-envelope"></i>
+            </div>
+            <div class="contact-content">
+              <h4>Shartlar Bo'yicha Savollar?</h4>
+              <p>Agar ushbu Shartlar bo'yicha savollaringiz bo'lsa, biz bilan bog'laning.</p>
+              <a href="{% url 'contact' %}" class="contact-link">Bog'lanish</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Terms Of Service Section -->
+{% endblock %}

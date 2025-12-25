@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Maxfiylik Siyosati - DentCare{% endblock %}
+{% block heading_title %}Maxfiylik Siyosati{% endblock %}
+{% block heading_desc %}Sizning ma'lumotlaringiz xavfsizligi bizning ustuvor vazifamiz{% endblock %}
+{% block breadcrumb %}Maxfiylik Siyosati{% endblock %}
+
+{% block content %}
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+
+            <div class="privacy-content">
+              <div class="last-updated" data-aos="fade-up" data-aos-delay="200">
+                <p><strong>Oxirgi yangilanish:</strong> 15 Dekabr 2024</p>
+              </div>
+
+              <div class="privacy-section" data-aos="fade-up" data-aos-delay="300">
+                <h3>To'planadigan Ma'lumotlar</h3>
+                <p>DentCare klinikasi sizga sifatli xizmat ko'rsatish uchun ma'lum shaxsiy ma'lumotlarni to'playdi. Biz faqat zarur bo'lgan ma'lumotlarni so'raymiz va ularni qat'iy maxfiy saqlaymiz.</p>
+
+                <h4>Shaxsiy Ma'lumotlar</h4>
+                <ul>
+                  <li>Ism va familiya</li>
+                  <li>Telefon raqami va email manzil</li>
+                  <li>Tug'ilgan sana va manzil</li>
+                  <li>Tibbiy tarix va stomatologik ma'lumotlar</li>
+                </ul>
+
+                <h4>Foydalanish Ma'lumotlari</h4>
+                <p>Saytimizga tashrif buyurganingizda avtomatik ravishda IP-manzil, brauzer turi va kirish vaqti kabi texnik ma'lumotlar to'planadi. Bu ma'lumotlar xizmatimizni yaxshilash uchun ishlatiladi.</p>
+              </div>
+
+              <div class="privacy-section" data-aos="fade-up" data-aos-delay="400">
+                <h3>Ma'lumotlardan Foydalanish</h3>
+                <p>To'plangan ma'lumotlar faqat quyidagi maqsadlarda ishlatiladi:</p>
+
+                <div class="info-box">
+                  <h4>Asosiy Maqsadlar</h4>
+                  <ol>
+                    <li>Tibbiy xizmat ko'rsatish va davolash rejasini tuzish</li>
+                    <li>Qabulga yozilish va eslatmalar yuborish</li>
+                    <li>To'lov jarayonlarini amalga oshirish</li>
+                    <li>Xizmat sifatini yaxshilash va tahlil qilish</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="privacy-section" data-aos="fade-up" data-aos-delay="500">
+                <h3>Ma'lumotlarni Ulashish</h3>
+                <p>Biz sizning shaxsiy ma'lumotlaringizni hech qachon sotmaymiz yoki uchinchi shaxslarga bermaymiz. Faqat quyidagi hollarda ma'lumotlar ulashilishi mumkin:</p>
+
+                <div class="highlight-box" data-aos="fade-up" data-aos-delay="600">
+                  <i class="bi bi-shield-check"></i>
+                  <h4>Biz Ma'lumotlaringizni Hech Qachon Sotmaymiz</h4>
+                  <p>Sizning ma'lumotlaringiz xavfsizligi bizning eng muhim vazifamiz. Biz faqat qonun talab qilgan hollarda yoki sizning yozma roziligingiz bilan ma'lumotlarni ulashamiz.</p>
+                </div>
+              </div>
+
+              <div class="privacy-section" data-aos="fade-up" data-aos-delay="700">
+                <h3>Ma'lumotlar Xavfsizligi</h3>
+                <p>Biz sizning ma'lumotlaringizni himoya qilish uchun zamonaviy xavfsizlik choralarini qo'llaymiz:</p>
+
+                <div class="security-measures">
+                  <div class="row">
+                    <div class="col-md-6" data-aos="fade-right" data-aos-delay="800">
+                      <div class="measure-item">
+                        <i class="bi bi-lock-fill"></i>
+                        <h5>Shifrlash</h5>
+                        <p>Barcha ma'lumotlar SSL shifrlash orqali himoyalangan holda uzatiladi va saqlanadi.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-6" data-aos="fade-left" data-aos-delay="900">
+                      <div class="measure-item">
+                        <i class="bi bi-server"></i>
+                        <h5>Xavfsiz Saqlash</h5>
+                        <p>Ma'lumotlar xavfsiz serverlarda saqlanadi va faqat vakolatli xodimlar kirishi mumkin.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="privacy-section" data-aos="fade-up" data-aos-delay="1000">
+                <h3>Sizning Huquqlaringiz</h3>
+                <p>Siz o'z shaxsiy ma'lumotlaringiz ustidan to'liq nazoratga egasiz:</p>
+
+                <div class="rights-list">
+                  <div class="right-item">
+                    <i class="bi bi-eye"></i>
+                    <div>
+                      <h5>Ko'rish Huquqi</h5>
+                      <p>Siz o'z ma'lumotlaringizni istalgan vaqtda ko'rish va nusxasini olishingiz mumkin.</p>
+                    </div>
+                  </div>
+                  <div class="right-item">
+                    <i class="bi bi-pencil"></i>
+                    <div>
+                      <h5>Tuzatish Huquqi</h5>
+                      <p>Noto'g'ri yoki eskirgan ma'lumotlarni yangilash va tuzatish huquqiga egasiz.</p>
+                    </div>
+                  </div>
+                  <div class="right-item">
+                    <i class="bi bi-trash"></i>
+                    <div>
+                      <h5>O'chirish Huquqi</h5>
+                      <p>O'z ma'lumotlaringizni o'chirishni talab qilishingiz mumkin (qonun ruxsat bergan hollarda).</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="privacy-section" data-aos="fade-up" data-aos-delay="1100">
+                <h3>Cookie va Kuzatuv</h3>
+                <p>Saytimiz foydalanuvchi tajribasini yaxshilash uchun cookie'lardan foydalanadi. Siz brauzer sozlamalarida cookie'larni o'chirib qo'yishingiz mumkin.</p>
+
+                <div class="cookie-types">
+                  <h4>Cookie Turlari</h4>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Turi</th>
+                          <th>Maqsadi</th>
+                          <th>Muddati</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Zaruriy</td>
+                          <td>Sayt ishlashi uchun kerak</td>
+                          <td>Sessiya</td>
+                        </tr>
+                        <tr>
+                          <td>Tahliliy</td>
+                          <td>Sayt foydalanishini tahlil qilish</td>
+                          <td>1 Yil</td>
+                        </tr>
+                        <tr>
+                          <td>Marketing</td>
+                          <td>Reklamalarni moslash</td>
+                          <td>6 Oy</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="privacy-section" data-aos="fade-up" data-aos-delay="1200">
+                <h3>Siyosatdagi O'zgarishlar</h3>
+                <p>Biz vaqti-vaqti bilan ushbu Maxfiylik Siyosatini yangilaymiz. Barcha o'zgarishlar ushbu sahifada e'lon qilinadi va yangi siyosat kuchga kirgan sanasi ko'rsatiladi.</p>
+              </div>
+
+              <div class="contact-section" data-aos="fade-up" data-aos-delay="1300">
+                <h3>Biz Bilan Bog'laning</h3>
+                <p>Agar maxfiylik siyosati bo'yicha savollaringiz bo'lsa yoki o'z huquqlaringizni amalga oshirmoqchi bo'lsangiz, biz bilan bog'laning.</p>
+
+                <div class="contact-info">
+                  <div class="contact-item">
+                    <i class="bi bi-envelope"></i>
+                    <span>info@dentcare.uz</span>
+                  </div>
+                  <div class="contact-item">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Amir Temur ko'chasi 108, Toshkent, O'zbekiston</span>
+                  </div>
+                  <div class="contact-item">
+                    <i class="bi bi-telephone"></i>
+                    <span>+998 71 123 45 67</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Privacy Section -->
+{% endblock %}

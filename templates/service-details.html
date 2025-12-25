@@ -1,0 +1,861 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ service.name }} - DentCare{% endblock %}
+{% block heading_title %}{{ service.name }}{% endblock %}
+{% block heading_desc %}{{ service.short_description }}{% endblock %}
+{% block breadcrumb %}
+  <li><a href="{% url 'services' %}">Xizmatlar</a></li>
+  <li><a href="{% url 'department_detail' service.department.slug %}">{{ service.department.name }}</a></li>
+  <li>{{ service.name }}</li>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Service Details Section -->
+    <section id="service-details-2" class="service-details-2 section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-5">
+
+          <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="200">
+            <div class="service-image">
+              {% if service.image %}
+              <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid">
+              {% else %}
+              <img src="{% static 'assets/img/health/cardiology-3.webp' %}" alt="{{ service.name }}" class="img-fluid">
+              {% endif %}
+              <div class="service-tag">
+                {% if service.is_popular %}
+                <span><i class="bi bi-star-fill"></i> Mashhur Xizmat</span>
+                {% else %}
+                <span>{{ service.department.name }}</span>
+                {% endif %}
+              </div>
+
+              <!-- Narx va Vaqt Badge -->
+              <div class="service-badges">
+                {% if service.price_from %}
+                <div class="badge-item price-badge">
+                  <i class="bi bi-cash-coin"></i>
+                  <div class="badge-content">
+                    <span class="badge-label">Narx</span>
+                    <span class="badge-value">
+                      {{ service.price_from|floatformat:0|intcomma }}
+                      {% if service.price_to %}
+                      - {{ service.price_to|floatformat:0|intcomma }}
+                      {% endif %}
+                      so'm
+                    </span>
+                  </div>
+                </div>
+                {% endif %}
+
+                {% if service.duration %}
+                <div class="badge-item duration-badge">
+                  <i class="bi bi-clock-fill"></i>
+                  <div class="badge-content">
+                    <span class="badge-label">Davomiyligi</span>
+                    <span class="badge-value">{{ service.duration }} daqiqa</span>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+            <div class="service-content">
+              <!-- Department Badge -->
+              <div class="department-badge">
+                <i class="{{ service.department.icon }}"></i>
+                <span>{{ service.department.name }}</span>
+              </div>
+
+              <h2>{{ service.name }}</h2>
+              <p class="service-tagline">{{ service.short_description }}</p>
+
+              {% if service.full_description %}
+                {{ service.full_description|linebreaks }}
+              {% else %}
+                <p>{{ service.short_description }}</p>
+              {% endif %}
+
+              <!-- Xizmat Xususiyatlari -->
+              <div class="service-features">
+                <h4><i class="bi bi-list-check me-2"></i>Xizmat Xususiyatlari:</h4>
+                <ul>
+                  <li><i class="bi bi-check-circle"></i> Professional mutaxassislar</li>
+                  <li><i class="bi bi-check-circle"></i> Zamonaviy uskunalar</li>
+                  <li><i class="bi bi-check-circle"></i> Sifat kafolati</li>
+                  {% if service.price_from %}
+                  <li><i class="bi bi-check-circle"></i> Qulay narxlar va to'lov rejalari</li>
+                  {% endif %}
+                  {% if service.duration %}
+                  <li><i class="bi bi-check-circle"></i> Tez va samarali jarayon</li>
+                  {% endif %}
+                </ul>
+              </div>
+
+              <!-- Quick Actions -->
+              <div class="service-actions">
+                <a href="{% url 'appointment' %}" class="btn-primary">
+                  <i class="bi bi-calendar-check me-2"></i>
+                  Qabulga Yozilish
+                </a>
+                <a href="{% url 'contact' %}" class="btn-secondary">
+                  <i class="bi bi-chat-dots me-2"></i>
+                  Maslahat Olish
+                </a>
+              </div>
+
+              <!-- Telegram/WhatsApp Quick Contact -->
+              <div class="quick-messenger-contact">
+                <p class="messenger-title">
+                  <i class="bi bi-lightning-charge-fill"></i>
+                  Tezkor Maslahat
+                </p>
+                <div class="messenger-links">
+                  {% if settings.telegram %}
+                  <a href="{{ settings.telegram }}"
+                     class="messenger-link telegram"
+                     target="_blank">
+                    <i class="bi bi-telegram"></i>
+                    Telegram
+                  </a>
+                  {% endif %}
+                  <a href="https://t.me/+998996212770?text=Assalomu%20aleykum!%20{{ service.name }}%20xizmati%20haqida%20ma'lumot%20olmoqchiman"
+                     class="messenger-link Telegram"
+                     target="_blank">
+                    <i class="bi bi-telegram"></i>
+                    Telegram
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Jarayon Bosqichlari -->
+        <div class="row mt-5">
+          <div class="col-12" data-aos="fade-up">
+            <div class="process-section">
+              <h3 class="text-center mb-5">
+                <i class="bi bi-arrow-repeat me-2"></i>
+                Xizmat Jarayoni
+              </h3>
+              <div class="row">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="process-card">
+                    <div class="process-number">1</div>
+                    <div class="card-icon">
+                      <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h4>Qabulga Yozilish</h4>
+                    <p>Onlayn yoki telefon orqali qulay vaqtga yoziling</p>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                  <div class="process-card">
+                    <div class="process-number">2</div>
+                    <div class="card-icon">
+                      <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h4>Diagnostika</h4>
+                    <p>To'liq ko'rik va professional tahlil</p>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                  <div class="process-card">
+                    <div class="process-number">3</div>
+                    <div class="card-icon">
+                      <i class="bi bi-hospital"></i>
+                    </div>
+                    <h4>Davolash</h4>
+                    <p>Zamonaviy uskunalar bilan professional xizmat</p>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                  <div class="process-card">
+                    <div class="process-number">4</div>
+                    <div class="card-icon">
+                      <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4>Kuzatuv</h4>
+                    <p>Davolanishdan keyin professional kuzatuv</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- O'xshash Xizmatlar -->
+        {% if related_services %}
+        <div class="row mt-5">
+          <div class="col-12" data-aos="fade-up">
+            <h3 class="text-center mb-4">
+              <i class="bi bi-layers me-2"></i>
+              O'xshash Xizmatlar
+            </h3>
+            <div class="row g-4">
+              {% for related in related_services %}
+              <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="related-service-card">
+                  <div class="card-icon-wrapper">
+                    <i class="{{ related.icon }}"></i>
+                  </div>
+                  <h4>{{ related.name }}</h4>
+                  <p>{{ related.short_description|truncatewords:20 }}</p>
+                  <div class="card-meta">
+                    {% if related.price_from %}
+                    <span class="price">
+                      <i class="bi bi-cash"></i>
+                      {{ related.price_from|floatformat:0|intcomma }} so'm
+                    </span>
+                    {% endif %}
+                    {% if related.duration %}
+                    <span class="duration">
+                      <i class="bi bi-clock"></i>
+                      {{ related.duration }} daqiqa
+                    </span>
+                    {% endif %}
+                  </div>
+                  <a href="{% url 'service_detail' related.slug %}" class="card-link">
+                    Batafsil
+                    <i class="bi bi-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Booking Section -->
+        <div class="row mt-5">
+
+          <div class="col-lg-8" data-aos="fade-right" data-aos-delay="100">
+            <div class="booking-section">
+              <h3>
+                <i class="bi bi-calendar-event me-2"></i>
+                Qabulga Yozilish
+              </h3>
+              <p>Bizning mutaxassislar sizni qabul qilishga tayyor. Qulay vaqtni tanlang va professional xizmat oling.</p>
+
+              <div class="availability-info">
+                {% if working_hours %}
+                  {% for hour in working_hours %}
+                    {% if hour.is_working_day and hour.opening_time %}
+                    <div class="info-item">
+                      <i class="bi bi-clock-fill"></i>
+                      <div>
+                        <strong>{{ hour.get_day_display }}</strong>
+                        <span>{{ hour.opening_time|time:"H:i" }} - {{ hour.closing_time|time:"H:i" }}</span>
+                      </div>
+                    </div>
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                <div class="info-item">
+                  <i class="bi bi-clock-fill"></i>
+                  <div>
+                    <strong>Ish Vaqti</strong>
+                    <span>Dushanba-Juma: 9:00 - 20:00</span>
+                  </div>
+                </div>
+                {% endif %}
+
+                <div class="info-item">
+                  <i class="bi bi-telephone-fill"></i>
+                  <div>
+                    <strong>Tez Yordam</strong>
+                    <span>{{ settings.phone|default:"+998 71 123 45 67" }}</span>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <div>
+                    <strong>Manzil</strong>
+                    <span>{{ settings.address|default:"Amir Temur ko'chasi 108, Toshkent" }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-left" data-aos-delay="200">
+            <div class="appointment-card">
+              <div class="card-header-icon">
+                <i class="bi bi-calendar-plus"></i>
+              </div>
+              <h4>Onlayn Qabul</h4>
+              <p>Tez va oson qabulga yozilish</p>
+
+              {% if service.price_from %}
+              <div class="price-display">
+                <span class="price-label">Narx:</span>
+                <span class="price-amount">
+                  {{ service.price_from|floatformat:0|intcomma }}
+                  {% if service.price_to %}
+                  - {{ service.price_to|floatformat:0|intcomma }}
+                  {% endif %}
+                  so'm
+                </span>
+              </div>
+              {% endif %}
+
+              {% if service.duration %}
+              <div class="duration-display">
+                <i class="bi bi-clock"></i>
+                <span>Davomiyligi: {{ service.duration }} daqiqa</span>
+              </div>
+              {% endif %}
+
+              <a href="{% url 'appointment' %}" class="btn-appointment">
+                <i class="bi bi-calendar-check me-2"></i>
+                Qabulga Yozilish
+              </a>
+
+              <div class="contact-alternative">
+                <span>Yoki qo'ng'iroq qiling</span>
+                <a href="tel:{{ settings.phone|default:'+998711234567' }}">
+                  {{ settings.phone|default:"+998 71 123 45 67" }}
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FAQ Section -->
+        {% if faqs %}
+        <div class="row mt-5">
+          <div class="col-12" data-aos="fade-up">
+            <div class="faq-section">
+              <h3 class="text-center mb-4">
+                <i class="bi bi-question-circle me-2"></i>
+                Tez-tez So'raladigan Savollar
+              </h3>
+              <div class="accordion" id="faqAccordion">
+                {% for faq in faqs %}
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ forloop.counter }}">
+                      {{ faq.question }}
+                    </button>
+                  </h2>
+                  <div id="collapse{{ forloop.counter }}"
+                       class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                       data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      {{ faq.answer }}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+
+    </section><!-- /Service Details Section -->
+
+    <style>
+    /* ============================================
+       SERVICE IMAGE & BADGES
+       ============================================ */
+    .service-image {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .service-image img {
+      width: 100%;
+      height: auto;
+      transition: transform 0.5s ease;
+    }
+
+    .service-image:hover img {
+      transform: scale(1.05);
+    }
+
+    .service-tag {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9ba3 100%);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 4px 15px rgba(63, 187, 192, 0.4);
+    }
+
+    .service-tag i {
+      margin-right: 5px;
+    }
+
+    .service-badges {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .badge-item {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .badge-item i {
+      font-size: 28px;
+      color: #3fbbc0;
+    }
+
+    .badge-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .badge-label {
+      font-size: 11px;
+      color: #6c757d;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .badge-value {
+      font-size: 14px;
+      color: #2c3e50;
+      font-weight: 700;
+    }
+
+    /* ============================================
+       DEPARTMENT BADGE
+       ============================================ */
+    .department-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #e8f5f5;
+      color: #3fbbc0;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .department-badge i {
+      font-size: 18px;
+    }
+
+    /* ============================================
+       QUICK MESSENGER CONTACT
+       ============================================ */
+    .quick-messenger-contact {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e8f5f5 100%);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 25px;
+      border-left: 4px solid #3fbbc0;
+    }
+
+    .messenger-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 12px;
+    }
+
+    .messenger-title i {
+      color: #3fbbc0;
+      margin-right: 5px;
+    }
+
+    .messenger-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .messenger-link {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .messenger-link.whatsapp {
+      background: #25D366;
+      color: white;
+    }
+
+    .messenger-link.telegram {
+      background: #0088cc;
+      color: white;
+    }
+
+    .messenger-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ============================================
+       PROCESS CARDS
+       ============================================ */
+    .process-section {
+      background: #f8f9fa;
+      padding: 50px 30px;
+      border-radius: 20px;
+    }
+
+    .process-card {
+      position: relative;
+      background: white;
+      padding: 30px 20px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .process-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .process-number {
+      position: absolute;
+      top: -15px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9ba3 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(63, 187, 192, 0.4);
+    }
+
+    .process-card .card-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #e8f5f5 0%, #d4f1f4 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .process-card .card-icon i {
+      font-size: 36px;
+      color: #3fbbc0;
+    }
+
+    .process-card h4 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .process-card p {
+      font-size: 14px;
+      color: #6c757d;
+      margin: 0;
+    }
+
+    /* ============================================
+       RELATED SERVICES
+       ============================================ */
+    .related-service-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .related-service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-icon-wrapper {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9ba3 100%);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .card-icon-wrapper i {
+      font-size: 32px;
+      color: white;
+    }
+
+    .related-service-card h4 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 12px;
+    }
+
+    .related-service-card p {
+      font-size: 14px;
+      color: #6c757d;
+      margin-bottom: 15px;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #e9ecef;
+    }
+
+    .card-meta span {
+      font-size: 13px;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-meta .price {
+      color: #3fbbc0;
+      font-weight: 700;
+    }
+
+    .related-service-card .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #3fbbc0;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .related-service-card .card-link:hover {
+      gap: 12px;
+    }
+
+    /* ============================================
+       APPOINTMENT CARD
+       ============================================ */
+    .appointment-card {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9ba3 100%);
+      color: white;
+      padding: 35px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(63, 187, 192, 0.3);
+    }
+
+    .card-header-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .card-header-icon i {
+      font-size: 40px;
+      color: white;
+    }
+
+    .appointment-card h4 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .appointment-card p {
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    .price-display {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .price-label {
+      display: block;
+      font-size: 12px;
+      opacity: 0.8;
+      margin-bottom: 5px;
+    }
+
+    .price-amount {
+      font-size: 24px;
+      font-weight: 700;
+      display: block;
+    }
+
+    .duration-display {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .btn-appointment {
+      display: block;
+      width: 100%;
+      background: white;
+      color: #3fbbc0;
+      padding: 15px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .btn-appointment:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      background: #f8f9fa;
+    }
+
+    .contact-alternative {
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .contact-alternative span {
+      display: block;
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+
+    .contact-alternative a {
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    /* ============================================
+       FAQ SECTION
+       ============================================ */
+    .faq-section {
+      background: #f8f9fa;
+      padding: 50px 40px;
+      border-radius: 20px;
+    }
+
+    .accordion-item {
+      border: none;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .accordion-button {
+      background: white;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 20px 25px;
+      border: none;
+    }
+
+    .accordion-button:not(.collapsed) {
+      background: #3fbbc0;
+      color: white;
+    }
+
+    .accordion-button:focus {
+      box-shadow: none;
+      border: none;
+    }
+
+    .accordion-body {
+      background: white;
+      padding: 20px 25px;
+      color: #6c757d;
+      line-height: 1.8;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+      .service-badges {
+        flex-direction: column;
+      }
+
+      .badge-item {
+        min-width: 100%;
+      }
+
+      .messenger-links {
+        flex-direction: column;
+      }
+
+      .process-card {
+        margin-bottom: 30px;
+      }
+    }
+    </style>
+
+{% endblock %}

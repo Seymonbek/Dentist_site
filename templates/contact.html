@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Bog'lanish - DentCare{% endblock %}
+{% block heading_title %}Bog'lanish{% endblock %}
+{% block heading_desc %}Biz bilan bog'laning - sizning savollaringizga javob berishga tayyormiz{% endblock %}
+{% block breadcrumb %}Bog'lanish{% endblock %}
+
+{% block content %}
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-box">
+              <i class="bi bi-geo-alt"></i>
+              <h3>Bizning Manzil</h3>
+              {% if settings %}
+                <p>{{ settings.address|linebreaks }}</p>
+              {% else %}
+                <p>Amir Temur ko'chasi, 108<br>Toshkent, O'zbekiston</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="info-box">
+              <i class="bi bi-telephone"></i>
+              <h3>Telefon Raqamlar</h3>
+              {% if settings %}
+                <p>{{ settings.phone|linebreaks }}</p>
+              {% else %}
+                <p>+998 71 123 45 67<br>+998 90 123 45 67</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="info-box">
+              <i class="bi bi-envelope"></i>
+              <h3>Email Manzilimiz</h3>
+              {% if settings %}
+                <p>{{ settings.email|linebreaks }}</p>
+              {% else %}
+                <p>info@dentcare.uz<br>support@dentcare.uz</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="row gy-4 mt-4">
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="map-container">
+              {% if settings and settings.map_embed %}
+                {{ settings.map_embed|safe }}
+              {% else %}
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.045704944406!2d69.24004631541715!3d41.31151597927093!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8b0cc379e9c3%3A0xa5a9323b4aa5cb98!2sTashkent%2C%20Uzbekistan!5e0!3m2!1sen!2s!4v1234567890123!5m2!1sen!2s" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="600">
+            <form action="{% url 'contact' %}" method="post" class="php-email-form" id="contactForm">
+              {% csrf_token %}
+              <div class="row gy-3">
+                <!-- Ism -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      name="name"
+                      id="name"
+                      class="form-control {% if form.name.errors %}is-invalid{% endif %}"
+                      placeholder="Ismingiz"
+                      required
+                      minlength="3"
+                      maxlength="100"
+                      value="{{ form.name.value|default:'' }}"
+                    >
+                    {% if form.name.errors %}
+                      <div class="invalid-feedback d-block">
+                        {{ form.name.errors.0 }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                      placeholder="Email"
+                      required
+                      value="{{ form.email.value|default:'' }}"
+                    >
+                    {% if form.email.errors %}
+                      <div class="invalid-feedback d-block">
+                        {{ form.email.errors.0 }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Mavzu -->
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      name="subject"
+                      id="subject"
+                      class="form-control {% if form.subject.errors %}is-invalid{% endif %}"
+                      placeholder="Mavzu"
+                      required
+                      minlength="5"
+                      maxlength="200"
+                      value="{{ form.subject.value|default:'' }}"
+                    >
+                    {% if form.subject.errors %}
+                      <div class="invalid-feedback d-block">
+                        {{ form.subject.errors.0 }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Xabar -->
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <textarea
+                      name="message"
+                      id="message"
+                      class="form-control {% if form.message.errors %}is-invalid{% endif %}"
+                      rows="10"
+                      placeholder="Xabaringiz"
+                      required
+                      minlength="20"
+                      maxlength="5000"
+                    >{{ form.message.value|default:'' }}</textarea>
+                    <small class="form-text text-muted">
+                      <span id="charCount">0</span> / 5000 belgi
+                    </small>
+                    {% if form.message.errors %}
+                      <div class="invalid-feedback d-block">
+                        {{ form.message.errors.0 }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Messages va Button -->
+                <div class="col-md-12 text-center">
+                  <!-- Django Messages -->
+                  {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+
+                  <!-- Submit Button -->
+                  <button type="submit" id="submitBtn" class="btn-submit">
+                    <span class="btn-text">Xabar Yuborish</span>
+                    <span class="btn-loading d-none">
+                      <span class="spinner-border spinner-border-sm me-2"></span>
+                      Yuborilmoqda...
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Contact Section -->
+{% endblock %}

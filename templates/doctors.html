@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Shifokorlar - DentCare{% endblock %}
+{% block heading_title %}Bizning Shifokorlar{% endblock %}
+{% block heading_desc %}Yuqori malakali va tajribali tish shifokorlari - sizning sog'ligingiz uchun{% endblock %}
+{% block breadcrumb %}Shifokorlar{% endblock %}
+
+{% block content %}
+
+    <!-- Doctors Section -->
+    <section id="doctors" class="doctors section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <!-- Filterable Doctor Directory -->
+        <div class="doctor-directory mb-5">
+          <div class="directory-bar p-3 p-md-4 rounded-3">
+            <form method="GET" action="{% url 'doctors' %}" id="doctorFilterForm">
+              <div class="row g-3 align-items-center">
+                <div class="col-lg-4">
+                  <label for="doctor-search" class="form-label mb-1">Shifokor Qidirish</label>
+                  <div class="position-relative">
+                    <i class="bi bi-search search-icon"></i>
+                    <input id="doctor-search"
+                           name="doctor_name"
+                           type="text"
+                           class="form-control search-input"
+                           placeholder="Ism yoki kalit so'z kiriting"
+                           value="{{ request.GET.doctor_name }}">
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <label class="form-label mb-1">Bo'lim</label>
+                  <select class="form-select" name="location" id="departmentFilter">
+                    <option value="">Barcha Bo'limlar</option>
+                    {% for dept in departments %}
+                      <option value="{{ dept.id }}" {% if request.GET.location == dept.id|slugify %}selected{% endif %}>
+                        {{ dept.name }} ({{ dept.doctor_count }})
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-lg-3">
+                  <label class="form-label mb-1">Mutaxassislik</label>
+                  <select class="form-select" name="specialty" id="specialtyFilter">
+                    <option value="">Barcha Mutaxassisliklar</option>
+                    {% for specialty in specialties %}
+                      <option value="{{ specialty }}" {% if request.GET.specialty == specialty %}selected{% endif %}>
+                        {{ specialty }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-lg-2 d-grid">
+                  <button type="submit" class="btn btn-appointment">Qidirish</button>
+                </div>
+              </div>
+            </form>
+          </div><!-- /directory-bar -->
+
+          <!-- Isotope Layout with Dynamic Filters -->
+          <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+            <ul class="directory-filters isotope-filters" data-aos="fade-up" data-aos-delay="200">
+              <li data-filter="*" class="filter-active">Barchasi ({{ doctors.count }})</li>
+              {% for dept in departments %}
+                <li data-filter=".filter-{{ dept.slug }}">{{ dept.name }} ({{ dept.doctor_count }})</li>
+              {% endfor %}
+            </ul>
+
+            <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="300">
+              {% for doctor in doctors %}
+              <div class="col-lg-3 col-md-6 doctor-item isotope-item filter-{{ doctor.department.slug }}">
+                <article class="doctor-card h-100">
+                  <figure class="doctor-media">
+                    <img src="{{ doctor.photo.url }}"
+                         class="img-fluid"
+                         alt="Dr. {{ doctor.first_name }} {{ doctor.last_name }}"
+                         loading="lazy">
+                    {% if doctor.is_featured %}
+                      <span class="tag">⭐ Asosiy</span>
+                    {% endif %}
+                  </figure>
+                  <div class="doctor-content">
+                    <h3 class="doctor-name">Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h3>
+                    <p class="doctor-title">
+                      {{ doctor.specialization }}
+                      {% if doctor.degree %} • {{ doctor.degree }}{% endif %}
+                    </p>
+                    <p class="doctor-desc">{{ doctor.bio|truncatewords:15 }}</p>
+
+                    <!-- Doctor Stats -->
+                    <div class="doctor-stats mb-2">
+                      <span class="stat-item">
+                        <i class="bi bi-star-fill text-warning"></i> {{ doctor.rating }}
+                      </span>
+                      <span class="stat-item">
+                        <i class="bi bi-people-fill text-primary"></i> {{ doctor.patients_count|intcomma }}+
+                      </span>
+                      <span class="stat-item">
+                        <i class="bi bi-clock-fill text-info"></i> {{ doctor.experience_years }} yil
+                      </span>
+                    </div>
+
+                    <div class="doctor-meta">
+                      <span class="badge dept">{{ doctor.department.name }}</span>
+                      {% if doctor.is_available %}
+                        <span class="badge bg-success">Mavjud</span>
+                      {% else %}
+                        <span class="badge bg-secondary">Band</span>
+                      {% endif %}
+                    </div>
+
+                    <div class="doctor-actions">
+                      <a href="{% url 'appointment' %}?doctor={{ doctor.id }}"
+                         class="btn btn-sm btn-appointment">
+                        <i class="bi bi-calendar-check"></i> Yozilish
+                      </a>
+                      <a href="tel:{{ doctor.phone }}" class="btn btn-sm btn-soft">
+                        <i class="bi bi-telephone"></i> Qo'ng'iroq
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              {% empty %}
+              <div class="col-12 text-center py-5">
+                <i class="bi bi-search display-1 text-muted"></i>
+                <p class="mt-3">Sizning qidiruvingiz bo'yicha shifokorlar topilmadi.</p>
+                <a href="{% url 'doctors' %}" class="btn btn-appointment">Barchasini ko'rish</a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Featured Doctor Profile (Dynamic) -->
+        {% if featured_doctor %}
+        <div class="single-profile mt-5">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-5" data-aos="fade-right" data-aos-delay="150">
+              <div class="profile-media">
+                <img src="{{ featured_doctor.photo.url }}"
+                     class="img-fluid"
+                     alt="Dr. {{ featured_doctor.first_name }} {{ featured_doctor.last_name }}">
+                <div class="availability">
+                  {% if featured_doctor.is_available %}
+                    <i class="bi bi-circle-fill me-1 text-success"></i> Shu hafta mavjud
+                  {% else %}
+                    <i class="bi bi-circle-fill me-1 text-danger"></i> Hozir band
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-7" data-aos="fade-left" data-aos-delay="200">
+              <div class="profile-content">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                  <span class="badge role">{{ featured_doctor.department.name }}</span>
+                  <span class="badge years">{{ featured_doctor.experience_years }}+ Yillik Tajriba</span>
+                  <span class="badge cert">⭐ Featured</span>
+                </div>
+                <h3 class="name mb-1">Dr. {{ featured_doctor.first_name }} {{ featured_doctor.last_name }}</h3>
+                <p class="title mb-3">{{ featured_doctor.specialization }} • {{ featured_doctor.degree|default:"Stomatolog" }}</p>
+                <p class="bio mb-3">{{ featured_doctor.bio|truncatewords:40 }}</p>
+
+                <ul class="list-unstyled highlights mb-4">
+                  {% if featured_doctor.education %}
+                    <li><i class="bi bi-mortarboard"></i> Ta'lim: {{ featured_doctor.education|truncatewords:10 }}</li>
+                  {% endif %}
+                  <li><i class="bi bi-hospital"></i> Ixtisoslashuv: {{ featured_doctor.specialization }}</li>
+                  {% if featured_doctor.achievements %}
+                    <li><i class="bi bi-award"></i> Yutuqlar: {{ featured_doctor.achievements|truncatewords:8 }}</li>
+                  {% endif %}
+                  <li><i class="bi bi-star-fill text-warning"></i> Reyting: {{ featured_doctor.rating }}/5.0</li>
+                  <li><i class="bi bi-people-fill text-primary"></i> Bemorlar: {{ featured_doctor.patients_count|intcomma }}+</li>
+                </ul>
+
+                <div class="d-flex flex-wrap gap-2">
+                  <a href="{% url 'appointment' %}?doctor={{ featured_doctor.id }}"
+                     class="btn btn-appointment">
+                    <i class="bi bi-calendar2-check me-1"></i> Qabulga Yozilish
+                  </a>
+                  <a href="tel:{{ featured_doctor.phone }}" class="btn btn-soft">
+                    <i class="bi bi-telephone me-1"></i> {{ featured_doctor.phone }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Compact View (Dynamic) -->
+        {% if doctors.count > 6 %}
+        <div class="compact-view mt-5">
+          <h3 class="text-center mb-4" data-aos="fade-up">Barcha Shifokorlar</h3>
+          <div class="row g-3">
+            {% for doctor in doctors %}
+              <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                <div class="minimal-card text-center">
+                  <img src="{{ doctor.photo.url }}"
+                       alt="Dr. {{ doctor.first_name }} {{ doctor.last_name }}"
+                       class="avatar img-fluid"
+                       loading="lazy">
+                  <div class="info">
+                    <h4 class="mb-0">Dr. {{ doctor.last_name }}</h4>
+                    <small>{{ doctor.specialization|truncatewords:2 }}</small>
+                    {% if doctor.is_available %}
+                      <div class="mt-1">
+                        <span class="badge bg-success-subtle text-success">Mavjud</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Statistics Section (Dynamic) -->
+        <div class="statistics-section mt-5 p-4 rounded-3 bg-light">
+          <div class="row text-center g-4">
+            <div class="col-md-3">
+              <div class="stat-box">
+                <i class="bi bi-people display-4 text-primary"></i>
+                <h3 class="mt-2">{{ doctors.count }}</h3>
+                <p class="text-muted">Shifokorlar</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-box">
+                <i class="bi bi-calendar-check display-4 text-success"></i>
+                <h3 class="mt-2">{{ total_experience|intcomma }}+</h3>
+                <p class="text-muted">Yillik Tajriba</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-box">
+                <i class="bi bi-heart-pulse display-4 text-danger"></i>
+                <h3 class="mt-2">{{ total_patients|intcomma }}+</h3>
+                <p class="text-muted">Davolangan Bemorlar</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-box">
+                <i class="bi bi-hospital display-4 text-warning"></i>
+                <h3 class="mt-2">{{ departments.count }}</h3>
+                <p class="text-muted">Bo'limlar</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Doctors Section -->
+
+<!-- Real-time Search JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('doctor-search');
+    const departmentFilter = document.getElementById('departmentFilter');
+    const specialtyFilter = document.getElementById('specialtyFilter');
+    const doctorItems = document.querySelectorAll('.doctor-item');
+
+    // Real-time search function
+    function filterDoctors() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedDept = departmentFilter.value.toLowerCase();
+        const selectedSpecialty = specialtyFilter.value.toLowerCase();
+
+        doctorItems.forEach(item => {
+            const doctorName = item.querySelector('.doctor-name').textContent.toLowerCase();
+            const doctorSpecialty = item.querySelector('.doctor-title').textContent.toLowerCase();
+            const doctorDept = item.classList.toString().toLowerCase();
+
+            const matchesSearch = doctorName.includes(searchTerm) || doctorSpecialty.includes(searchTerm);
+            const matchesDept = !selectedDept || doctorDept.includes(selectedDept);
+            const matchesSpecialty = !selectedSpecialty || doctorSpecialty.includes(selectedSpecialty);
+
+            if (matchesSearch && matchesDept && matchesSpecialty) {
+                item.style.display = '';
+                item.classList.add('filtered-in');
+            } else {
+                item.style.display = 'none';
+                item.classList.remove('filtered-in');
+            }
+        });
+
+        // Update count
+        const visibleCount = document.querySelectorAll('.doctor-item.filtered-in').length;
+        console.log(`${visibleCount} ta shifokor topildi`);
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterDoctors);
+    departmentFilter.addEventListener('change', filterDoctors);
+    specialtyFilter.addEventListener('change', filterDoctors);
+
+    // Initialize
+    filterDoctors();
+});
+</script>
+
+{% endblock %}

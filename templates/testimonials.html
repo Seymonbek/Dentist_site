@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Bemorlar Fikri - DentCare{% endblock %}
+{% block heading_title %}Bemorlar Fikri{% endblock %}
+{% block heading_desc %}Bizning bemorlarimiz biz haqimizda nima deyishadi{% endblock %}
+{% block breadcrumb %}Bemorlar Fikri{% endblock %}
+
+{% block content %}
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials section">
+
+      <div class="container">
+
+        <div class="row gy-4">
+          {% for testimonial in testimonials %}
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+            <div class="testimonial-item">
+              <img src="{{ testimonial.photo.url }}" class="testimonial-img" alt="{{ testimonial.name }}">
+              <h3>{{ testimonial.name }}</h3>
+              {% if testimonial.position %}
+                <h4>{{ testimonial.position }}</h4>
+              {% endif %}
+              <div class="stars">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= testimonial.rating %}
+                    <i class="bi bi-star-fill"></i>
+                  {% else %}
+                    <i class="bi bi-star"></i>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <p>
+                <i class="bi bi-quote quote-icon-left"></i>
+                <span>{{ testimonial.comment }}</span>
+                <i class="bi bi-quote quote-icon-right"></i>
+              </p>
+            </div>
+          </div>
+          {% empty %}
+          <div class="col-12 text-center">
+            <p>Hozircha bemorlar fikri mavjud emas.</p>
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
+
+    </section><!-- /Testimonials Section -->
+{% endblock %}

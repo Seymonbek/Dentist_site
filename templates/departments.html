@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Bo'limlar - DentCare{% endblock %}
+{% block heading_title %}Bizning Bo'limlar{% endblock %}
+{% block heading_desc %}Har bir bo'limda professional mutaxassislar sizning xizmatingizda{% endblock %}
+{% block breadcrumb %}Bo'limlar{% endblock %}
+
+{% block content %}
+
+    <!-- Departments Section -->
+    <section id="departments" class="departments section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+          {% for department in departments %}
+          <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter|add:100 }}">
+            <div class="department-item">
+              <div class="department-content">
+                <div class="department-header">
+                  <div class="department-icon">
+                    <i class="{{ department.icon }}"></i>
+                  </div>
+                  <div class="department-info">
+                    <h3>{{ department.name }}</h3>
+                    <span class="department-category">{{ department.name_en|default:department.name }}</span>
+                  </div>
+                </div>
+                <p>{{ department.description }}</p>
+                <div class="department-features">
+                  {% if department.is_active %}
+                    <span class="feature-badge">Faol</span>
+                  {% endif %}
+                  <span class="feature-badge">{{ department.doctors.count }} Shifokor</span>
+                </div>
+              </div>
+              <div class="department-image">
+                {% if department.image %}
+                  <a href="{% url 'department_detail' slug=department.slug %}" class="department-link">
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+                  <img src="{{ department.image.url }}" alt="{{ department.name }}" class="img-fluid">
+                {% else %}
+                  <img src="{% static 'assets/img/health/cardiology-2.webp' %}" alt="{{ department.name }}" class="img-fluid">
+                {% endif %}
+                <div class="department-overlay">
+                  <a href="{% url 'department_detail' slug=department.slug %}" class="department-link">
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="col-12 text-center">
+            <p>Hozircha bo'limlar mavjud emas.</p>
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
+
+    </section><!-- /Departments Section -->
+{% endblock %}

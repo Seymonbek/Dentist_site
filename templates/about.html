@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Biz Haqimizda - DentCare{% endblock %}
+{% block heading_title %}Biz Haqimizda{% endblock %}
+{% block heading_desc %}Professional stomatologiya xizmatlari O'zbekiston bozoridagi yetakchi klinika{% endblock %}
+{% block breadcrumb %}Biz Haqimizda{% endblock %}
+
+{% block content %}
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="intro-section">
+          <div class="row justify-content-center">
+            <div class="col-lg-8 text-center" data-aos="fade-up" data-aos-delay="100">
+              <h2>{{ about_data.title|default:"Klinikamiz haqida" }}</h2>
+              <p class="lead">{{ about_data.description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="image-stats-section">
+          <div class="row align-items-center">
+            <div class="col-lg-7" data-aos="fade-right" data-aos-delay="200">
+              <div class="image-layout-wrapper"> <div class="primary-image">
+                  {% if clinic_images.0 %}
+                    <img src="{{ clinic_images.0.image.url }}" alt="{{ clinic_images.0.title }}" class="img-fluid">
+                  {% else %}
+                    <img src="{% static 'assets/img/health/facilities-6.webp' %}" alt="Default" class="img-fluid">
+                  {% endif %}
+                  <div class="certification-badge">
+                    <i class="bi bi-award"></i>
+                    <span>ISO Sertifikatlangan</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left" data-aos-delay="300">
+              <div class="stats-content">
+                <h3>Ishonchli Stomatologiya Xizmati</h3>
+                <p>DentCare O'zbekistonning yetakchi stomatologiya markazlaridan biri hisoblanadi. Biz zamonaviy uskunalar va yuqori malakali shifokorlar bilan har bir bemorga sifatli xizmat ko'rsatamiz.</p>
+
+                <div class="stats-list">
+                  <div class="stat-row">
+                    <div class="stat-number">
+                      <span data-purecounter-start="0" data-purecounter-end="15000" data-purecounter-duration="0" class="purecounter">15000</span>
+                    </div>
+                    <div class="stat-info">
+                      <h5>Muvaffaqiyatli Davolash</h5>
+                      <p>A'lo natijalar bilan yakunlangan davolash</p>
+                    </div>
+                  </div>
+
+                  <div class="stat-row">
+                    <div class="stat-number">
+                      <span data-purecounter-start="0" data-purecounter-end="98" data-purecounter-duration="0" class="purecounter">98</span><span>%</span>
+                    </div>
+                    <div class="stat-info">
+                      <h5>Bemorlar Mamnuniyati</h5>
+                      <p>So'rovnomalar asosida aniqlangan reyting</p>
+                    </div>
+                  </div>
+
+                  <div class="stat-row">
+                    <div class="stat-number">
+                      <span data-purecounter-start="0" data-purecounter-end="25" data-purecounter-duration="0" class="purecounter">25</span>
+                    </div>
+                    <div class="stat-info">
+                      <h5>Tish Shifokorlari</h5>
+                      <p>Turli yo'nalishlar bo'yicha mutaxassislar</p>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mission-section" data-aos="fade-up" data-aos-delay="400">
+          <div class="row">
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="mission-item">
+                <div class="mission-icon">
+                  <i class="bi bi-heart"></i>
+                </div>
+                <h4>Bizning Missiyamiz</h4>
+                <p>Har bir bemorga individual yondashuv va yuqori sifatli stomatologik xizmat ko'rsatish orqali O'zbekistonda eng yaxshi tabassum yaratish markaziga aylanish.</p>
+              </div>
+            </div>
+
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+              <div class="mission-item">
+                <div class="mission-icon">
+                  <i class="bi bi-eye"></i>
+                </div>
+                <h4>Bizning Qarashlarimiz</h4>
+                <p>Mintaqamizning yetakchi stomatologiya klinikasi bo'lish, innovatsion davolash usullari, ajoyib natijalar va jamiyat sog'lig'ini yaxshilashga sodiqligimiz bilan tanilish.</p>
+              </div>
+            </div>
+
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+              <div class="mission-item">
+                <div class="mission-icon">
+                  <i class="bi bi-star"></i>
+                </div>
+                <h4>Bizning Va'damiz</h4>
+                <p>Har bir bemor qulay va qo'llab-quvvatlovchi muhitda eng yuqori sifatli xizmatni oladi, ularning sog'lig'i, qadr-qimmati va farovonligi bizning ustuvor vazifamizdir.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="specialties-section" data-aos="fade-up" data-aos-delay="500">
+
+          <div class="row">
+            <div class="col-lg-12 text-center">
+              <h3>Bizning Yo'nalishlar</h3>
+              <p class="section-description">Mutaxassis bo'limlarimiz ko'p qirrali stomatologik xizmat ko'rsatish uchun hamkorlikda ishlaydi</p>
+            </div>
+          </div>
+
+          <div class="row g-4 justify-content-center">
+            {% for dept in departments %}
+            <div class="col-lg-2 col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+              <div class="specialty-item">
+                <i class="{{ dept.icon }}"></i>
+                <span>{{ dept.name }}</span>
+              </div>
+            </div>
+            {% empty %}
+              <p class="text-center">Hozircha bo'limlar mavjud emas.</p>
+            {% endfor %}
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /About Section -->
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Savol-Javoblar - DentCare{% endblock %}
+{% block heading_title %}Ko'p Beriladigan Savollar{% endblock %}
+{% block heading_desc %}Eng ko'p beriladigan savollar va ularning javoblari{% endblock %}
+{% block breadcrumb %}Savol-Javoblar{% endblock %}
+
+{% block content %}
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq section">
+
+      <div class="container">
+
+        <div class="row justify-content-center">
+
+          <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="faq-container">
+              {% for category, faqs in categories.items %}
+                {% if category != 'Umumiy' %}
+                  <h4 class="faq-category-title">{{ category }}</h4>
+                {% endif %}
+                {% for faq in faqs %}
+                <div class="faq-item {% if forloop.first and forloop.parentloop.first %}faq-active{% endif %}">
+                  <h3>{{ faq.question }}</h3>
+                  <div class="faq-content">
+                    <p>{{ faq.answer|linebreaks }}</p>
+                  </div>
+                  <i class="faq-toggle bi bi-chevron-right"></i>
+                </div>
+                {% endfor %}
+              {% empty %}
+              <div class="text-center">
+                <p>Hozircha savol-javoblar mavjud emas.</p>
+              </div>
+              {% endfor %}
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /FAQ Section -->
+{% endblock %}
