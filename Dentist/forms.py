@@ -4,7 +4,7 @@ Barcha formalar va validatsiyalar
 
 from django import forms
 from django.core.exceptions import ValidationError
-from datetime import date
+from datetime import date, timedelta
 import re
 
 from .models import Appointment, ContactMessage, Department, Doctor, Service
@@ -15,41 +15,33 @@ class AppointmentForm(forms.ModelForm):
 
     class Meta:
         model = Appointment
-        fields = [
-            'name', 'phone', 'department', 'doctor',
-            'service', 'appointment_date', 'appointment_time', 'message'
-        ]
+        fields = ['name', 'phone', 'department', 'doctor','service', 'appointment_date', 'appointment_time', 'message']
 
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': "To'liq ismingiz",
-                'required': True
             }),
             'phone': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': '+998901234567',
-                'required': True
             }),
             'department': forms.Select(attrs={
                 'class': 'form-select',
-                'required': True
             }),
             'doctor': forms.Select(attrs={
-                'class': 'form-select'
+                'class': 'form-select',
             }),
             'service': forms.Select(attrs={
-                'class': 'form-select'
+                'class': 'form-select',
             }),
             'appointment_date': forms.DateInput(attrs={
                 'class': 'form-control',
                 'type': 'date',
-                'min': date.today().isoformat(),
-                'required': True
             }),
             'appointment_time': forms.TimeInput(attrs={
                 'class': 'form-control',
-                'type': 'time'
+                'type': 'time',
             }),
             'message': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -62,10 +54,10 @@ class AppointmentForm(forms.ModelForm):
             'name': "To'liq Ism",
             'phone': 'Telefon',
             'department': "Bo'lim",
-            'doctor': 'Shifokor (ixtiyoriy)',
-            'service': 'Xizmat (ixtiyoriy)',
+            'doctor': 'Shifokor',
+            'service': 'Xizmat',
             'appointment_date': 'Sana',
-            'appointment_time': 'Vaqt (ixtiyoriy)',
+            'appointment_time': 'Vaqt',
             'message': 'Xabar (ixtiyoriy)'
         }
 
@@ -78,34 +70,31 @@ class AppointmentForm(forms.ModelForm):
         """Form initialization"""
         super().__init__(*args, **kwargs)
 
+        # Dinamik min sana
+        self.fields['appointment_date'].widget.attrs['min'] = date.today().isoformat()
+
         # Faqat faol bo'limlar
-        self.fields['department'].queryset = Department.objects.filter(
-            is_active=True
-        ).order_by('order', 'name')
+        self.fields['department'].queryset = Department.objects.filter(is_active=True).order_by('order', 'name')
+        self.fields['department'].required = True
 
         # Faqat mavjud shifokorlar
-        self.fields['doctor'].queryset = Doctor.objects.filter(
-            is_available=True
-        ).select_related('department').order_by('order', 'last_name')
-
-        self.fields['doctor'].required = False
-        self.fields['doctor'].empty_label = "Shifokor tanlang (ixtiyoriy)"
+        self.fields['doctor'].queryset = Doctor.objects.filter(is_available=True).select_related('department').order_by('order', 'last_name')
+        self.fields['doctor'].required = True
+        self.fields['doctor'].empty_label = "Shifokor tanlang"
 
         # Faqat faol xizmatlar
-        self.fields['service'].queryset = Service.objects.filter(
-            is_active=True
-        ).select_related('department').order_by('order', 'name')
+        self.fields['service'].queryset = Service.objects.filter(is_active=True).select_related('department').order_by('order', 'name')
+        self.fields['service'].required = True
+        self.fields['service'].empty_label = "Xizmat tanlang"
 
-        self.fields['service'].required = False
-        self.fields['service'].empty_label = "Xizmat tanlang (ixtiyoriy)"
+        # Sana majburiy
+        self.fields['appointment_date'].required = True
 
-        # Ixtiyoriy maydonlar
+        # Vaqt majburiy
+        self.fields['appointment_time'].required = True
+
+        # Xabar ixtiyoriy
         self.fields['message'].required = False
-        self.fields['appointment_time'].required = False
-
-    # ========================================================================
-    # FIELD VALIDATIONS
-    # ========================================================================
 
     def clean_name(self):
         """Ism validatsiyasi"""
@@ -114,7 +103,6 @@ class AppointmentForm(forms.ModelForm):
         if not name:
             raise ValidationError("Ism majburiy maydon")
 
-        # Bo'sh joylarni tozalash
         name = ' '.join(name.split())
 
         if len(name) < 3:
@@ -123,8 +111,7 @@ class AppointmentForm(forms.ModelForm):
         if name.isdigit():
             raise ValidationError("Ism faqat raqamlardan iborat bo'lishi mumkin emas")
 
-        # Faqat harflar va bo'shliqlar
-        if not re.match(r'^[a-zA-Z\s\'\"\u0400-\u04FF]+$', name):
+        if not re.match(r'^[a-zA-Z\u0400-\u04FF\s\'"-]+$', name):
             raise ValidationError("Ism faqat harflardan iborat bo'lishi kerak")
 
         return name
@@ -132,57 +119,37 @@ class AppointmentForm(forms.ModelForm):
     def clean_phone(self):
         """Telefon validatsiyasi"""
         phone = self.cleaned_data.get('phone')
+        return validate_uzbek_phone(phone)
 
-        if not phone:
-            raise ValidationError("Telefon raqam majburiy")
-
-        # Bo'shliqlar va belgilarni olib tashlash
-        phone = phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
-
-        # +998XXXXXXXXX yoki 998XXXXXXXXX
-        pattern = r'^\+?998\d{9}$'
-        if not re.match(pattern, phone):
-            raise ValidationError(
-                "Telefon raqam +998XXXXXXXXX formatida bo'lishi kerak. "
-                "Masalan: +998901234567"
-            )
-
-        # + qo'shish
-        if not phone.startswith('+'):
-            phone = '+' + phone
-
-        return phone
 
     def clean_appointment_date(self):
-        """Sana validatsiyasi"""
+        """Sana validatsiyasi - 12-oy xatoligi tuzatilgan varianti"""
         appointment_date = self.cleaned_data.get('appointment_date')
 
         if not appointment_date:
             raise ValidationError("Qabul sanasini tanlang")
 
-        if appointment_date < date.today():
+        today = date.today()
+
+        # 1. O'tgan sanani tekshirish
+        if appointment_date < today:
             raise ValidationError(
                 f"Qabul sanasi o'tgan bo'lishi mumkin emas! "
-                f"Minimal sana: {date.today().strftime('%d.%m.%Y')}"
+                f"Minimal sana: {today.strftime('%d.%m.%Y')}"
             )
 
-        # Maksimal 3 oy oldinga
-        max_date = date.today().replace(month=date.today().month + 3)
+        # 2. Maksimal 3 oy oldinga (12+3=15 xatosini bermaydi)
+        # timedelta(days=90) har qanday oyda xatosiz ishlaydi
+        max_date = today + timedelta(days=90)
+
         if appointment_date > max_date:
             raise ValidationError(
-                f"Qabul sanasi maksimal {max_date.strftime('%d.%m.%Y')} gacha bo'lishi mumkin"
+                f"Qabul sanasi juda uzoq muddatga belgilandi. "
+                f"Maksimal {max_date.strftime('%d.%m.%Y')} gacha bo'lishi mumkin"
             )
 
         return appointment_date
 
-    def clean_appointment_time(self):
-        """Vaqt validatsiyasi (ixtiyoriy)"""
-        appointment_time = self.cleaned_data.get('appointment_time')
-        return appointment_time
-
-    # ========================================================================
-    # MULTI-FIELD VALIDATION
-    # ========================================================================
 
     def clean(self):
         """Ko'p maydonli validatsiya"""
@@ -211,56 +178,31 @@ class AppointmentForm(forms.ModelForm):
         return cleaned_data
 
 
-# ============================================================================
-# CONTACT FORM
-# ============================================================================
-
 class ContactForm(forms.ModelForm):
     """Bog'lanish formasi"""
 
     class Meta:
         model = ContactMessage
-        fields = ['name', 'email', 'subject', 'message']
+        fields = ['name', 'phone', 'subject', 'message']
 
         widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Ismingiz',
-                'required': True
-            }),
-            'email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'email@example.com',
-                'required': True
-            }),
-            'subject': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Xabar mavzusi',
-                'required': True
-            }),
-            'message': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 10,
-                'placeholder': 'Xabaringizni yozing...',
-                'required': True
-            })
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ismingiz'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+998XXXXXXXXX'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Xabar mavzusi'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': 'Xabaringiz...'}),
         }
 
         labels = {
             'name': 'Ism',
-            'email': 'Email',
+            'phone': 'Telefon',
             'subject': 'Mavzu',
             'message': 'Xabar'
         }
 
         help_texts = {
-            'email': 'Sizning email manzilingiz',
-            'message': 'Kamida 20 ta belgi kiriting',
+            'phone': 'Telefon raqamingizni +998XXXXXXXXX formatida kiriting',
+            'message': 'Kamida 13 ta belgi kiriting',
         }
-
-    # ========================================================================
-    # FIELD VALIDATIONS
-    # ========================================================================
 
     def clean_name(self):
         """Ism validatsiyasi"""
@@ -280,22 +222,6 @@ class ContactForm(forms.ModelForm):
 
         return name
 
-    def clean_email(self):
-        """Email validatsiyasi"""
-        email = self.cleaned_data.get('email')
-
-        if not email:
-            raise ValidationError("Email majburiy maydon")
-
-        # Kichik harf va bo'sh joylarni olib tashlash
-        email = email.lower().strip()
-
-        # Django avtomatik email formatini tekshiradi
-        # Lekin qo'shimcha tekshiruv
-        if '@' not in email or '.' not in email.split('@')[1]:
-            raise ValidationError("Email manzil noto'g'ri formatda")
-
-        return email
 
     def clean_subject(self):
         """Mavzu validatsiyasi"""
@@ -323,9 +249,9 @@ class ContactForm(forms.ModelForm):
 
         message = message.strip()
 
-        if len(message) < 20:
+        if len(message) < 10:
             raise ValidationError(
-                f"Xabar juda qisqa. Kamida 20 ta belgi kiriting. "
+                f"Xabar juda qisqa. Kamida 10 ta belgi kiriting. "
                 f"Hozir: {len(message)} ta belgi"
             )
 
@@ -337,25 +263,32 @@ class ContactForm(forms.ModelForm):
 
         return message
 
+    def clean_phone(self):
+        """Telefon raqami validatsiyasi"""
+        phone = self.cleaned_data.get('phone')
+        # forms.py oxirida validate_uzbek_phone bor, shundan foydalanamiz
+        return validate_uzbek_phone(phone)
 
-# ============================================================================
-# HELPER FUNCTIONS
-# ============================================================================
 
-def validate_uzbek_phone(phone):
+def validate_uzbek_phone(phone: str) -> str:
     """
-    O'zbekiston telefon raqamini tekshirish
-    Returns: Formatlangan telefon (+998XXXXXXXXX) yoki ValidationError
+    O'zbekiston telefon raqamini tekshirish.
+    Returns: Formatlangan telefon (+998XXXXXXXXX) yoki ValidationError.
     """
+
+    if not phone:
+        raise ValidationError("Telefon raqam majburiy maydon")
+
     # Bo'sh joylar va maxsus belgilarni olib tashlash
-    phone = re.sub(r'[^\d+]', '', phone)
+    phone = re.sub(r'[\s\-\(\)]', '', phone)
 
-    # Pattern: +998 + 9 ta raqam
-    pattern = r'^\+?998\d{9}$'
+    if phone.startswith('++'):
+        phone = phone.lstrip('+')
 
+    pattern = r'^(?:\+?998\d{9})$'
     if not re.match(pattern, phone):
         raise ValidationError(
-            "Telefon raqam +998XXXXXXXXX formatida bo'lishi kerak"
+            "Telefon raqam +998XXXXXXXXX formatida bo'lishi kerak. Masalan: +998901234567"
         )
 
     # + qo'shish agar yo'q bo'lsa

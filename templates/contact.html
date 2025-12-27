@@ -64,118 +64,47 @@
           </div>
 
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="600">
-            <form action="{% url 'contact' %}" method="post" class="php-email-form" id="contactForm">
+            <form action="{% url 'contact' %}" method="post" id="contactForm">
               {% csrf_token %}
+
+              {% if messages %}
+                <div class="col-md-12 mb-3">
+                  {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
               <div class="row gy-3">
-                <!-- Ism -->
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      class="form-control {% if form.name.errors %}is-invalid{% endif %}"
-                      placeholder="Ismingiz"
-                      required
-                      minlength="3"
-                      maxlength="100"
-                      value="{{ form.name.value|default:'' }}"
-                    >
-                    {% if form.name.errors %}
-                      <div class="invalid-feedback d-block">
-                        {{ form.name.errors.0 }}
-                      </div>
-                    {% endif %}
+                    <input type="text" name="name" class="form-control" placeholder="Ismingiz" required value="{{ form.name.value|default:'' }}">
                   </div>
                 </div>
 
-                <!-- Email -->
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      class="form-control {% if form.email.errors %}is-invalid{% endif %}"
-                      placeholder="Email"
-                      required
-                      value="{{ form.email.value|default:'' }}"
-                    >
-                    {% if form.email.errors %}
-                      <div class="invalid-feedback d-block">
-                        {{ form.email.errors.0 }}
-                      </div>
-                    {% endif %}
+                    <input type="text" name="phone" class="form-control" placeholder="Telefon raqamingiz (+998 ...)" required>
                   </div>
                 </div>
 
-                <!-- Mavzu -->
                 <div class="col-md-12">
                   <div class="form-group">
-                    <input
-                      type="text"
-                      name="subject"
-                      id="subject"
-                      class="form-control {% if form.subject.errors %}is-invalid{% endif %}"
-                      placeholder="Mavzu"
-                      required
-                      minlength="5"
-                      maxlength="200"
-                      value="{{ form.subject.value|default:'' }}"
-                    >
-                    {% if form.subject.errors %}
-                      <div class="invalid-feedback d-block">
-                        {{ form.subject.errors.0 }}
-                      </div>
-                    {% endif %}
+                    <input type="text" name="subject" class="form-control" placeholder="Mavzu" required value="{{ form.subject.value|default:'' }}">
                   </div>
                 </div>
 
-                <!-- Xabar -->
                 <div class="col-md-12">
                   <div class="form-group">
-                    <textarea
-                      name="message"
-                      id="message"
-                      class="form-control {% if form.message.errors %}is-invalid{% endif %}"
-                      rows="10"
-                      placeholder="Xabaringiz"
-                      required
-                      minlength="20"
-                      maxlength="5000"
-                    >{{ form.message.value|default:'' }}</textarea>
-                    <small class="form-text text-muted">
-                      <span id="charCount">0</span> / 5000 belgi
-                    </small>
-                    {% if form.message.errors %}
-                      <div class="invalid-feedback d-block">
-                        {{ form.message.errors.0 }}
-                      </div>
-                    {% endif %}
+                    <textarea name="message" class="form-control" rows="8" placeholder="Xabaringiz" required>{{ form.message.value|default:'' }}</textarea>
                   </div>
                 </div>
 
-                <!-- Messages va Button -->
                 <div class="col-md-12 text-center">
-                  <!-- Django Messages -->
-                  {% if messages %}
-                    {% for message in messages %}
-                      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle me-2"></i>
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                      </div>
-                    {% endfor %}
-                  {% endif %}
-
-                  <!-- Submit Button -->
-                  <button type="submit" id="submitBtn" class="btn-submit">
-                    <span class="btn-text">Xabar Yuborish</span>
-                    <span class="btn-loading d-none">
-                      <span class="spinner-border spinner-border-sm me-2"></span>
-                      Yuborilmoqda...
-                    </span>
-                  </button>
+                  <button type="submit" class="appointment-btn w-100">Xabar Yuborish</button>
                 </div>
               </div>
             </form>

@@ -46,8 +46,8 @@ urlpatterns = [
 
     # AJAX endpoints
     path('ajax/load-doctors/', views.load_doctors, name='ajax_load_doctors'),
-    path('ajax/get-available-times/', views.get_available_times, name='get_available_times'),
-]
+    # urls.py ichida
+    path('ajax/get-available-times/', views.get_available_times, name='get_available_times'),]
 
 
 # ============================================================================

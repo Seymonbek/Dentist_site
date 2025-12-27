@@ -13,15 +13,15 @@ from django.http import JsonResponse
 from datetime import date, datetime, timedelta
 from collections import defaultdict
 import requests
+import os
 
-from .models import (
-    Department, Doctor, Service, Appointment,
-    Testimonial, GalleryImage, FAQ, SiteSettings,
-    About, WorkingHours, DoctorLeave
-)
+from dotenv import load_dotenv
+
+from config import settings
+from .models import (Department, Doctor, Service, Appointment, Testimonial, GalleryImage, FAQ, SiteSettings, About, WorkingHours, DoctorLeave)
 from .forms import AppointmentForm, ContactForm
 
-
+load_dotenv()
 # ============================================================================
 # ASOSIY SAHIFALAR
 # ============================================================================
@@ -31,54 +31,29 @@ def index(request):
     """Bosh sahifa"""
 
     # Bosh shifokor
-    chief_doctor = Doctor.objects.filter(
-        is_available=True
-    ).only(
-        'first_name', 'last_name', 'photo', 'phone'
-    ).order_by('order', 'id').first()
+    chief_doctor = Doctor.objects.filter(is_available=True).only('first_name', 'last_name', 'photo', 'phone').order_by('order', 'id').first()
 
     # Bo'limlar
-    departments = Department.objects.filter(
-        is_active=True
-    ).only(
-        'id', 'name', 'slug', 'icon', 'description', 'image'
-    )[:6]
+    departments = Department.objects.filter(is_active=True).only('id', 'name', 'slug', 'icon', 'description', 'image')[:6]
 
     # Mashhur xizmatlar
-    popular_services = Service.objects.filter(
-        is_active=True,
-        is_popular=True
-    ).select_related('department').only(
+    popular_services = Service.objects.filter(is_active=True, is_popular=True).select_related('department').only(
         'id', 'name', 'slug', 'icon', 'short_description',
-        'price_from', 'price_to', 'department__name', 'department__slug'
-    )[:6]
+        'price_from', 'price_to', 'department__name', 'department__slug')[:6]
 
     # Featured shifokorlar
-    featured_doctors = Doctor.objects.filter(
-        is_featured=True,
-        is_available=True
-    ).select_related('department').only(
+    featured_doctors = Doctor.objects.filter(is_featured=True, is_available=True).select_related('department').only(
         'id', 'first_name', 'last_name', 'slug', 'specialization',
-        'photo', 'rating', 'experience_years', 'department__name'
-    )[:4]
+        'photo', 'rating', 'experience_years', 'department__name')[:4]
 
     # Testimonials
-    testimonials = Testimonial.objects.filter(
-        is_active=True,
-        is_featured=True
-    ).only(
-        'name', 'position', 'photo', 'rating', 'comment'
-    )[:6]
+    testimonials = Testimonial.objects.filter(is_active=True, is_featured=True).only('name', 'position', 'photo', 'rating', 'comment')[:6]
 
     # Galereya
-    gallery_photos = GalleryImage.objects.filter(
-        is_active=True
-    ).order_by('-created_at')[:3]
+    gallery_photos = GalleryImage.objects.filter(is_active=True).order_by('-created_at')[:3]
 
     # Mutaxassisliklar
-    specialties = Doctor.objects.values_list(
-        'specialization', flat=True
-    ).distinct()
+    specialties = Doctor.objects.values_list('specialization', flat=True).distinct()
 
     # Statistika
     stats = {
@@ -338,9 +313,8 @@ def doctors(request):
 # ============================================================================
 
 def send_telegram_message(message):
-    """Telegram orqali xabar yuborish"""
-    token = "8534873016:AAFOFHUxWFdTpMATFs7jBJvzgPsNs1swUX4"
-    chat_id = "1768996871"
+    token = os.getenv('TELEGRAM_BOT_TOKEN')
+    chat_id = os.getenv('TELEGRAM_CHAT_ID')
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     payload = {
         "chat_id": chat_id,
@@ -350,64 +324,59 @@ def send_telegram_message(message):
 
     try:
         response = requests.post(url, data=payload, timeout=5)
+        # Terminalda tekshirish uchun:
+        print(f"Telegram status code: {response.status_code}")
+        print(f"Telegram response: {response.text}")
+
         return response.status_code == 200
     except Exception as e:
-        print(f"Telegram xatolik: {e}")
+        print(f"Telegram ulanish xatosi: {e}")
         return False
-
 
 @require_http_methods(["GET", "POST"])
 def appointment(request):
-    """Qabulga yozilish"""
+    """Qabulga yozilish - Tuzatilgan variant"""
 
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
 
         if form.is_valid():
+            # 1. Ma'lumotni bazaga saqlaymiz (Telegramdan qat'i nazar)
             appointment_obj = form.save()
 
-            # Telegram xabar
+            # 2. Telegram xabari matnini tayyorlaymiz
             message = (
                 f"🦷 <b>Yangi qabul!</b>\n\n"
                 f"👤 {appointment_obj.name}\n"
                 f"📞 {appointment_obj.phone}\n"
                 f"📅 {appointment_obj.appointment_date}\n"
+                f"📅 {appointment_obj.appointment_time}\n"
                 f"🏥 {appointment_obj.department.name}"
             )
-
             if appointment_obj.doctor:
                 message += f"\n👨‍⚕️ {appointment_obj.doctor.get_full_name()}"
 
-            success = send_telegram_message(message)
+            # 3. Telegramga yuborishni sinab ko'ramiz
+            send_telegram_message(message)
 
-            if success:
-                messages.success(
-                    request,
-                    f"Hurmatli {appointment_obj.name}, qabulga muvaffaqiyatli yozildingiz! "
-                    f"Tez orada {appointment_obj.phone} raqamiga qo'ng'iroq qilamiz."
-                )
-                return redirect('appointment')
-            else:
-                messages.error(
-                    request,
-                    "Xabar yuborishda texnik xatolik. Qaytadan urinib ko'ring."
-                )
+            # 4. Foydalanuvchiga har doim muvaffaqiyat xabarini ko'rsatamiz
+            messages.success(
+                request,
+                f"Hurmatli {appointment_obj.name}, qabulga muvaffaqiyatli yozildingiz! "
+                f"Tez orada {appointment_obj.phone} raqamiga qo'ng'iroq qilamiz."
+            )
+            return redirect('appointment')
+
         else:
-            messages.error(request, "Formada xatolik bor, tekshiring.")
+            # Forma xato to'ldirilgan bo'lsa
+            messages.error(request, "Formada xatolik bor, iltimos ma'lumotlarni tekshiring.")
+
     else:
         form = AppointmentForm()
 
-    # Context
-    departments_list = Department.objects.filter(
-        is_active=True
-    ).only('id', 'name')
-
-    doctors_list = Doctor.objects.filter(
-        is_available=True
-    ).select_related('department').only(
-        'id', 'first_name', 'last_name', 'specialization',
-        'department__name'
-    )
+    # Bo'limlar va shifokorlar ro'yxati (GET va POST xatolari uchun)
+    departments_list = Department.objects.filter(is_active=True).only('id', 'name')
+    doctors_list = Doctor.objects.filter(is_available=True).select_related('department')
 
     context = {
         'form': form,
@@ -416,8 +385,8 @@ def appointment(request):
         'today': date.today(),
     }
 
+    # Bu return har doim ishlashi shart!
     return render(request, 'appointment.html', context)
-
 
 # ============================================================================
 # AJAX FUNKSIYALAR
@@ -535,34 +504,32 @@ def gallery(request):
     return render(request, 'gallery.html', context)
 
 
-@require_http_methods(["GET", "POST"])
 def contact(request):
-    """Bog'lanish"""
-
     if request.method == 'POST':
         form = ContactForm(request.POST)
-
         if form.is_valid():
             contact_message = form.save()
 
-            messages.success(
-                request,
-                f"Rahmat, {contact_message.name}! "
-                "Xabaringiz qabul qilindi. Tez orada javob beramiz."
+            message = (
+                f"📩 <b>Yangi xabar (Bog'lanish)</b>\n\n"
+                f"👤 Ism: {contact_message.name}\n"
+                f"📞 Tel: {contact_message.phone}\n"
+                f"📝 Mavzu: {contact_message.subject}\n"
+                f"💬 Xabar: {contact_message.message}"
             )
 
+            send_telegram_message(message)  #
+
+            messages.success(request, f"Rahmat, {contact_message.name}! Xabaringiz qabul qilindi.")
             return redirect('contact')
         else:
-            messages.error(request, "Formadagi xatolarni to'g'irlang.")
+            # Xatoni terminalda ko'rish uchun
+            print(form.errors)
+            messages.error(request, "Iltimos, ma'lumotlarni to'g'ri kiriting.")
     else:
         form = ContactForm()
 
-    context = {
-        'form': form,
-    }
-
-    return render(request, 'contact.html', context)
-
+    return render(request, 'contact.html', {'form': form})
 
 def faq(request):
     """Savol-Javoblar"""
