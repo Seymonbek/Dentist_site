@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Dr. {{ doctor.first_name }} {{ doctor.last_name }} — {{ doctor.specialization }}{% endblock %}
+{% block heading_title %}Dr. {{ doctor.first_name }} {{ doctor.last_name }}{% endblock %}
+{% block heading_desc %}{{ doctor.specialization }} • {{ doctor.department.name }}{% endblock %}
+{% block breadcrumb %}
+  <li><a href="{% url 'doctors' %}">Shifokorlar</a></li>
+  <li><a href="{% url 'department_detail' slug=doctor.department.slug %}">{{ doctor.department.name }}</a></li>
+  <li>Dr. {{ doctor.first_name }} {{ doctor.last_name }}</li>
+{% endblock %}
+
+{% block content %}
+<section class="doctors section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <div class="single-profile">
+      <div class="row gy-4">
+        <!-- Left: Photo + contact / quick actions -->
+        <div class="col-lg-4" data-aos="fade-right" data-aos-delay="150">
+          <div class="profile-media card">
+            {% if doctor.photo %}
+              <img src="{{ doctor.photo.url }}" alt="Dr. {{ doctor.first_name }} {{ doctor.last_name }}" class="img-fluid">
+            {% else %}
+              <img src="{% static 'assets/img/health/staff-8.webp' %}" alt="Dr. {{ doctor.first_name }} {{ doctor.last_name }}" class="img-fluid">
+            {% endif %}
+            <div class="profile-meta p-3">
+              <h3 class="mb-1">Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h3>
+              <p class="text-muted mb-2">{{ doctor.specialization }}{% if doctor.degree %} • {{ doctor.degree }}{% endif %}</p>
+
+              <div class="doctor-stats mb-2">
+                <span class="stat-item"><i class="bi bi-star-fill text-warning"></i> {{ doctor.rating|default:5 }}</span>
+                <span class="stat-item"><i class="bi bi-people-fill text-primary"></i> {{ doctor.patients_count|intcomma }}+</span>
+                <span class="stat-item"><i class="bi bi-clock-fill text-info"></i> {{ doctor.experience_years }} yil</span>
+              </div>
+
+              <div class="d-grid gap-2">
+                <a href="{% url 'appointment' %}?doctor={{ doctor.id }}" class="btn btn-appointment btn-block">
+                  <i class="bi bi-calendar-check"></i> Qabulga yozilish
+                </a>
+                {% if doctor.phone %}
+                <a href="tel:{{ doctor.phone }}" class="btn btn-outline">
+                  <i class="bi bi-telephone"></i> Telefon orqali murojaat
+                </a>
+                {% endif %}
+                <a href="{% url 'department_detail' slug=doctor.department.slug %}" class="btn btn-soft">
+                  <i class="bi bi-building"></i> {{ doctor.department.name }}
+                </a>
+                <a href="{% url 'doctors' %}" class="btn btn-link text-muted">
+                  <i class="bi bi-arrow-left"></i> Orqaga ro'yxatga
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Related doctors (sidebar) -->
+          {% if related_doctors %}
+          <div class="related-doctors mt-4">
+            <h5 class="mb-3">Boshqa shifokorlar ({{ doctor.department.name }})</h5>
+            <ul class="list-unstyled">
+              {% for rd in related_doctors %}
+              <li class="mb-2 d-flex align-items-center">
+                <a href="{% url 'doctor_detail' slug=rd.slug %}" class="me-2">
+                  {% if rd.photo %}
+                    <img src="{{ rd.photo.url }}" alt="{{ rd.get_full_name }}" width="48" height="48" class="rounded-circle">
+                  {% else %}
+                    <img src="{% static 'assets/img/health/staff-1.webp' %}" alt="{{ rd.get_full_name }}" width="48" height="48" class="rounded-circle">
+                  {% endif %}
+                </a>
+                <div>
+                  <a href="{% url 'doctor_detail' slug=rd.slug %}" class="d-block">{{ rd.first_name }} {{ rd.last_name }}</a>
+                  <small class="text-muted">{{ rd.specialization }}</small>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Right: Tabs (About, Schedule, Services, Reviews) -->
+        <div class="col-lg-8" data-aos="fade-left" data-aos-delay="200">
+          <div class="profile-content card p-3">
+            <div class="profile-header d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h2 class="mb-1">Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h2>
+                <p class="text-muted mb-0">{{ doctor.specialization }} • {{ doctor.department.name }}</p>
+              </div>
+              <div class="text-end">
+                {% if doctor.is_available %}
+                  <span class="badge bg-success">Mavjud</span>
+                {% else %}
+                  <span class="badge bg-secondary">Band</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Nav pills -->
+            <ul class="nav nav-pills profile-tabs mb-3" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="about-tab" data-bs-toggle="pill" data-bs-target="#about" type="button" role="tab">Haqqida</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="schedule-tab" data-bs-toggle="pill" data-bs-target="#schedule" type="button" role="tab">Ish grafigi</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="services-tab" data-bs-toggle="pill" data-bs-target="#services-tab-pane" type="button" role="tab">Xizmatlar</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reviews-tab" data-bs-toggle="pill" data-bs-target="#reviews" type="button" role="tab">Bemorlar fikri</button>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+              <!-- ABOUT -->
+              <div class="tab-pane fade show active" id="about" role="tabpanel">
+                <div class="mb-3">
+                  {% if doctor.bio %}
+                    <p class="lead">{{ doctor.bio|linebreaks }}</p>
+                  {% else %}
+                    <p class="text-muted">Shifokor haqida batafsil ma'lumot mavjud emas.</p>
+                  {% endif %}
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Mutaxassislik</h6>
+                    <p class="mb-0">{{ doctor.specialization }}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Tajriba</h6>
+                    <p class="mb-0">{{ doctor.experience_years }} yil</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SCHEDULE -->
+              <div class="tab-pane fade" id="schedule" role="tabpanel">
+                <h5 class="mb-3">Ish vaqti</h5>
+                <div class="table-responsive">
+                  <table class="table table-borderless">
+                    <tbody>
+                      <tr>
+                        <td>Du (Dushanba)</td>
+                        <td>
+                          {% if doctor.is_mon %}
+                            {{ doctor.work_start|time:"H:i" }} - {{ doctor.work_end|time:"H:i" }}
+                          {% else %}
+                            Dam olish
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Se (Seshanba)</td>
+                        <td>
+                          {% if doctor.is_tue %}
+                            {{ doctor.work_start|time:"H:i" }} - {{ doctor.work_end|time:"H:i" }}
+                          {% else %}
+                            Dam olish
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Chor (Chorshanba)</td>
+                        <td>
+                          {% if doctor.is_wed %}
+                            {{ doctor.work_start|time:"H:i" }} - {{ doctor.work_end|time:"H:i" }}
+                          {% else %}
+                            Dam olish
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Pay (Payshanba)</td>
+                        <td>
+                          {% if doctor.is_thu %}
+                            {{ doctor.work_start|time:"H:i" }} - {{ doctor.work_end|time:"H:i" }}
+                          {% else %}
+                            Dam olish
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Ju (Juma)</td>
+                        <td>
+                          {% if doctor.is_fri %}
+                            {{ doctor.work_start|time:"H:i" }} - {{ doctor.work_end|time:"H:i" }}
+                          {% else %}
+                            Dam olish
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Sha (Shanba)</td>
+                        <td>
+                          {% if doctor.is_sat %}
+                            {{ doctor.work_start|time:"H:i" }} - {{ doctor.work_end|time:"H:i" }}
+                          {% else %}
+                            Dam olish
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Yak (Yakshanba)</td>
+                        <td>
+                          {% if doctor.is_sun %}
+                            {{ doctor.work_start|time:"H:i" }} - {{ doctor.work_end|time:"H:i" }}
+                          {% else %}
+                            Dam olish
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {% if working_hours %}
+                <div class="mt-3">
+                  <small class="text-muted">Klinika umumiy ish vaqtlari:</small>
+                  <ul class="list-inline mt-2">
+                    {% for wh in working_hours %}
+                      <li class="list-inline-item me-3">{{ wh.get_day_display }}: {{ wh.start|time:"H:i" }} - {{ wh.end|time:"H:i" }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- SERVICES -->
+              <div class="tab-pane fade" id="services-tab-pane" role="tabpanel">
+                <h5 class="mb-3">Xizmatlar ({{ doctor.department.name }})</h5>
+
+                <div class="row g-3">
+                  {% for s in doctor.department.services.all %}
+                  <div class="col-md-6">
+                    <div class="service-item p-2 d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-1"><a href="{% url 'service_detail' slug=s.slug %}">{{ s.name }}</a></h6>
+                        <small class="text-muted">{{ s.short_description|truncatewords:10 }}</small>
+                      </div>
+                      <div class="text-end">
+                        {% if s.price_from %}
+                          <div class="text-primary fw-bold">{{ s.price_from|floatformat:0|intcomma }} so'm</div>
+                        {% endif %}
+                        {% if s.duration %}
+                          <div class="text-muted">{{ s.duration }} min</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  {% empty %}
+                  <div class="col-12">
+                    <p class="text-muted">Bu doktorga tegishli alohida xizmatlar ro'yxati mavjud emas. Biroq bo'lim xizmatlari ko'rsatilgan.</p>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- REVIEWS -->
+              <div class="tab-pane fade" id="reviews" role="tabpanel">
+                <h5 class="mb-3">Bemorlar fikri</h5>
+
+                {% if testimonials %}
+                  <div class="row g-3">
+                    {% for t in testimonials %}
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="d-flex align-items-start">
+                            {% if t.photo %}
+                              <img src="{{ t.photo.url }}" alt="{{ t.name }}" width="56" height="56" class="rounded-circle me-3">
+                            {% else %}
+                              <div class="avatar-placeholder rounded-circle me-3">{{ t.name|slice:":1" }}</div>
+                            {% endif %}
+                            <div class="stars small text-warning">
+                              {% for _ in "12345"|make_list %}
+                                {% if forloop.counter <= t.rating %}
+                                  ★
+                                {% else %}
+                                  ☆
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <p class="text-muted">Hozircha bemorlar fikrlari mavjud emas. Siz birinchi bo'lib fikr qoldirishingiz mumkin.</p>
+                {% endif %}
+
+                <div class="mt-4">
+                  <a href="{% url 'testimonials' %}" class="btn btn-outline">Barcha fikrlarni ko'rish yoki fikr qoldirish</a>
+                </div>
+              </div>
+
+            </div><!-- /.tab-content -->
+          </div><!-- /.profile-content -->
+        </div>
+
+      </div><!-- /.row -->
+    </div><!-- /.single-profile -->
+
+  </div><!-- /.container -->
+</section>
+{% endblock %}

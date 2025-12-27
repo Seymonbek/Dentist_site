@@ -33,14 +33,16 @@
                 </div>
                 <div class="col-lg-3">
                   <label class="form-label mb-1">Bo'lim</label>
-                  <select class="form-select" name="location" id="departmentFilter">
-                    <option value="">Barcha Bo'limlar</option>
-                    {% for dept in departments %}
-                      <option value="{{ dept.id }}" {% if request.GET.location == dept.id|slugify %}selected{% endif %}>
-                        {{ dept.name }} ({{ dept.doctor_count }})
-                      </option>
-                    {% endfor %}
-                  </select>
+                  {% with request.GET.department|default:"" as selected_department %}
+                    <select name="department" id="departmentFilter" class="form-select">
+                      <option value="">Barcha Bo'limlar</option>
+                      {% for dept in departments %}
+                        <option value="{{ dept.slug }}" {% if selected_department == dept.slug %}selected{% endif %}>
+                          {{ dept.name }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  {% endwith %}
                 </div>
                 <div class="col-lg-3">
                   <label class="form-label mb-1">Mutaxassislik</label>
@@ -108,11 +110,14 @@
                       {% if doctor.is_available %}
                         <span class="badge bg-success">Mavjud</span>
                       {% else %}
-                        <spanx class="badge bg-secondary">Band</spanx>
+                        <span class="badge bg-secondary">Band</span>
                       {% endif %}
                     </div>
 
                     <div class="doctor-actions">
+                      <a href="{% url 'doctor_detail' slug=doctor.slug %}" class="btn btn-sm btn-outline">
+                        <i class="bi bi-person-lines-fill"></i> Profil
+                      </a>
                       <a href="{% url 'appointment' %}?doctor={{ doctor.id }}"
                          class="btn btn-sm btn-appointment">
                         <i class="bi bi-calendar-check"></i> Yozilish

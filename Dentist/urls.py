@@ -30,6 +30,7 @@ urlpatterns = [
 
     # Shifokorlar
     path('doctors/', views.doctors, name='doctors'),
+    path('doctors/<slug:slug>/', views.doctor_detail, name='doctor_detail'),
 
     # Qabulga yozilish
     path('appointment/', views.appointment, name='appointment'),

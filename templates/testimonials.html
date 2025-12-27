@@ -46,6 +46,29 @@
           {% endfor %}
         </div>
 
+        <h2>Bemorlar fikrlari</h2>
+
+        <div class="row">
+          {% for t in testimonials %}
+            <div class="col-md-4">
+              <div class="testimonial-card">
+                <p>{{ t.comment }}</p>
+                <p><strong>{{ t.name }}</strong> — {{ t.position }}</p>
+              </div>
+            </div>
+          {% empty %}
+            <p>Hozircha fikrlar mavjud emas.</p>
+          {% endfor %}
+        </div>
+
+        <hr>
+        <h3>Fikr qoldirish</h3>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary">Yuborish</button>
+        </form>
+
       </div>
 
     </section><!-- /Testimonials Section -->

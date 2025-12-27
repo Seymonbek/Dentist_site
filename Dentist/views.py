@@ -14,7 +14,7 @@ from datetime import date, datetime, timedelta
 from collections import defaultdict
 import requests
 import os
-
+from .forms import TestimonialForm
 from dotenv import load_dotenv
 
 from config import settings
@@ -236,69 +236,67 @@ def service_detail(request, slug):
 # ============================================================================
 
 def doctors(request):
-    """Shifokorlar ro'yxati"""
+    """
+    Shifokorlar ro'yxati — GET params:
+      - doctor_name: qidiruv (ism yoki kalit so'z)
+      - location: department id (string) yoki department slug
+      - specialty: mutaxassislik nomi (string)
+    Context (template uchun):
+      - doctors, departments, specialties, featured_doctor,
+        total_experience, total_patients
+    """
+    # Asosiy queryset
+    doctors_qs = Doctor.objects.filter(is_available=True).select_related('department')
 
-    # Barcha shifokorlar
-    doctors_list = Doctor.objects.filter(
-        is_available=True
-    ).select_related('department').only(
-        'id', 'first_name', 'last_name', 'slug', 'specialization',
-        'photo', 'bio', 'experience_years', 'rating', 'patients_count',
-        'is_featured', 'is_available', 'phone',
-        'department__name', 'department__slug', 'degree'
-    )
-
-    # Qidiruv parametrlari
-    name_query = request.GET.get('doctor_name')
-    specialty_query = request.GET.get('specialty')
-    department_query = request.GET.get('location')
-
-    # Filtrlash
-    if name_query:
-        doctors_list = doctors_list.filter(
-            Q(first_name__icontains=name_query) |
-            Q(last_name__icontains=name_query)
+    # Qidiruv (ism yoki kalit so'z)
+    name_q = request.GET.get('doctor_name', '').strip()
+    if name_q:
+        doctors_qs = doctors_qs.filter(
+            Q(first_name__icontains=name_q) |
+            Q(last_name__icontains=name_q) |
+            Q(specialization__icontains=name_q) |
+            Q(bio__icontains=name_q)
         )
 
-    if specialty_query:
-        doctors_list = doctors_list.filter(
-            specialization__icontains=specialty_query
-        )
+    # Bo'lim (location) - template’da biz dept.id yuboryapmiz,
+    # lekin foydalanuvchi slug ham yuborishi mumkin — ikkisini ham qo'llab-quvvatlaymiz.
+    # request.GET dan olish
+    location = request.GET.get('department', '').strip()
+    department_obj = None
+    if location:
+        # agar id yuborilsa
+        try:
+            department_obj = Department.objects.get(id=int(location))
+        except (ValueError, Department.DoesNotExist):
+            # yoki slug bo'lsa
+            department_obj = Department.objects.filter(slug=location).first()
 
-    if department_query:
-        doctors_list = doctors_list.filter(
-            department_id=department_query
-        )
+    if department_obj:
+        doctors_qs = doctors_qs.filter(department=department_obj)
+    # Mutaxassislik filtri
+    specialty = request.GET.get('specialty', '').strip()
+    if specialty:
+        doctors_qs = doctors_qs.filter(specialization__iexact=specialty)
 
-    # Filter uchun ma'lumotlar
-    departments_for_filter = Department.objects.filter(
-        is_active=True
-    ).annotate(
+    # Tartiblash (masalan feature/ordering)
+    doctors_qs = doctors_qs.order_by('order', 'last_name')
+
+    # Qo'shimcha context ma'lumotlari
+    departments = Department.objects.filter(is_active=True).annotate(
         doctor_count=Count('doctors', filter=Q(doctors__is_available=True))
-    ).only('id', 'name', 'slug')
+    ).order_by('order', 'name')
 
-    specialties = Doctor.objects.values_list(
-        'specialization', flat=True
-    ).distinct()
+    specialties = Doctor.objects.values_list('specialization', flat=True).distinct()
 
-    # Featured shifokor
-    featured_doctor = Doctor.objects.filter(
-        is_featured=True,
-        is_available=True
-    ).select_related('department').first()
+    featured_doctor = Doctor.objects.filter(is_featured=True, is_available=True).first()
 
-    # Statistika
-    total_experience = doctors_list.aggregate(
-        Sum('experience_years')
-    )['experience_years__sum'] or 100
-
-    total_patients = doctors_list.aggregate(
-        Sum('patients_count')
-    )['patients_count__sum'] or 5000
+    # Statistika (misol uchun jami yillik tajriba va bemorlar soni)
+    total_experience = doctors_qs.aggregate(total=Sum('experience_years'))['total'] or 0
+    total_patients = doctors_qs.aggregate(total=Sum('patients_count'))['total'] or 0
 
     context = {
-        'doctors': doctors_list,
-        'departments': departments_for_filter,
+        'doctors': doctors_qs,
+        'departments': departments,
         'specialties': specialties,
         'featured_doctor': featured_doctor,
         'total_experience': total_experience,
@@ -306,6 +304,49 @@ def doctors(request):
     }
 
     return render(request, 'doctors.html', context)
+
+def doctor_detail(request, slug):
+    """
+    Shifokor profili sahifasi
+    URL: /doctors/<slug>/
+    Context:
+      - doctor: Doctor obyekti
+      - related_doctors: shu bo'limdagi boshqa shifokorlar (sidebar)
+      - working_hours: klinika umumiy ish vaqtlari
+      - testimonials: aktiv bemorlar fikrlari (so'nggi 6 ta)
+    """
+    doctor = get_object_or_404(
+        Doctor.objects.select_related('department'),
+        slug=slug
+    )
+
+    # Shu bo'limdagi boshqa shifokorlar
+    related_doctors = Doctor.objects.filter(
+        department=doctor.department,
+        is_available=True
+    ).exclude(id=doctor.id).only(
+        'id', 'first_name', 'last_name', 'slug', 'photo', 'specialization'
+    )[:6]
+
+    # Klinika umumiy ish vaqtlari (agar mavjud bo'lsa)
+    working_hours = WorkingHours.objects.filter(is_working_day=True).order_by('day')
+
+    # Bemorlar fikrlari (faqat faol)
+    testimonials = Testimonial.objects.filter(is_active=True).order_by('-created_at')[:6]
+
+    # Bo'lim xizmatlari (faqat faol)
+    department_services = doctor.department.services.filter(is_active=True).only(
+        'id', 'name', 'slug', 'short_description', 'price_from', 'duration'
+    )
+
+    context = {
+        'doctor': doctor,
+        'related_doctors': related_doctors,
+        'working_hours': working_hours,
+        'testimonials': testimonials,
+        'department_services': department_services,
+    }
+    return render(request, 'doctor-detail.html', context)
 
 
 # ============================================================================
@@ -530,6 +571,31 @@ def contact(request):
         form = ContactForm()
 
     return render(request, 'contact.html', {'form': form})
+
+
+def testimonials(request):
+    """Bemorlar fikrlari ko'rsatish va yangi fikr qoldirish"""
+    if request.method == 'POST':
+        form = TestimonialForm(request.POST, request.FILES)
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.is_active = False  # admin tasdig'iga qoldirish yaxshidir
+            t.save()
+            messages.success(request, "Fikringiz qabul qilindi — tez orada e'lon qilinadi.")
+            return redirect('testimonials')
+        else:
+            messages.error(request, "Formada xatolik bor, iltimos qayta urinib ko'ring.")
+    else:
+        form = TestimonialForm()
+
+    testimonials = Testimonial.objects.filter(is_active=True).order_by('-created_at')
+
+    context = {
+        'testimonials': testimonials,
+        'form': form,
+    }
+    return render(request, 'testimonials.html', context)
+
 
 def faq(request):
     """Savol-Javoblar"""

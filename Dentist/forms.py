@@ -6,7 +6,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from datetime import date, timedelta
 import re
-
+from .models import Testimonial
 from .models import Appointment, ContactMessage, Department, Doctor, Service
 
 
@@ -296,3 +296,15 @@ def validate_uzbek_phone(phone: str) -> str:
         phone = '+' + phone
 
     return phone
+
+
+class TestimonialForm(forms.ModelForm):
+    class Meta:
+        model = Testimonial
+        fields = ['name', 'position', 'photo', 'rating', 'comment']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'position': forms.TextInput(attrs={'class': 'form-control'}),
+            'rating': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 5}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }

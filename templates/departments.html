@@ -45,11 +45,6 @@
                 {% else %}
                   <img src="{% static 'assets/img/health/cardiology-2.webp' %}" alt="{{ department.name }}" class="img-fluid">
                 {% endif %}
-                <div class="department-overlay">
-                  <a href="{% url 'department_detail' slug=department.slug %}" class="department-link">
-                    <i class="fas fa-arrow-right"></i>
-                  </a>
-                </div>
               </div>
             </div>
           </div>
